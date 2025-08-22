@@ -78,7 +78,7 @@ const styles = {
 
     @media ${MediaQueries.mobile} {
       svg {
-        width: calc(60vw - var(--gap-m));
+        width: 200px;
         height: auto;
       }
     }
@@ -102,7 +102,7 @@ const styles = {
     }
 
     @media ${MediaQueries.mobile} {
-      padding-top: 64px;
+      padding-top: calc(27px + var(--gap-s));
     }
   `,
   hasSubnav: css`

@@ -4,7 +4,7 @@ import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
-
+import { Perf } from "r3f-perf";
 import { Canvas } from "@react-three/fiber";
 
 import Experience from "./Experience";
@@ -13,6 +13,18 @@ export default function Scene({ ...props }) {
   const path = usePathname();
 
   const imgRef = useRef(null);
+
+  const [showPerf, setShowPerf] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "d" || e.key === "D") {
+        setShowPerf((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Everything defined in here will persist between route changes, only children are swapped
   return (
@@ -25,6 +37,7 @@ export default function Scene({ ...props }) {
         }}
       >
         <Canvas dpr={[1, 2]} {...props}>
+          {showPerf && <Perf />}
           <Experience />
           {/* <mesh>
                   <planeGeometry

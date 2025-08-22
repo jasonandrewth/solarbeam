@@ -17,20 +17,16 @@ const Stone = () => {
       color: green,
       // Physically based transmission/refraction
       transparent: true,
-      transmission: 1.0, // enable real refraction
+      transmission: 0.8, // enable real refraction
       ior: 1.57, // emerald ~1.57
-      thickness: 1.2, // controls refraction path length
+      thickness: 1.0, // controls refraction path length
       // Crisp, glassy surface
       roughness: 0.3,
       metalness: 0.0,
-      // Make the gem pop under environment lighting
-      specularIntensity: 1.0,
-      specularColor: new THREE.Color("#cde7d6"),
-      clearcoat: 1.0,
-      clearcoatRoughness: 0.02,
-      envMapIntensity: 2.0,
 
-      side: THREE.DoubleSide,
+      //   envMapIntensity: 2.0,
+
+      //   side: THREE.DoubleSide,
     });
     // Slightly heavier: proper light transmission & IOR
     const glassPhysical = new THREE.MeshPhysicalMaterial({

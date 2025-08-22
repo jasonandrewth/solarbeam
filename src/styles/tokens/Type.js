@@ -61,7 +61,7 @@ const Type = css`
     --type--spacing--3: 0.06em;
 
     @media ${MediaQueries.mobile} {
-      --type--base-size: 16;
+      --type--base-size: 12;
 
       --type--scale---2: 0.5rem;
       //p1
