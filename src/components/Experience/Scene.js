@@ -33,7 +33,7 @@ export default function Scene({ ...props }) {
         className="canvas-wrapper"
         css={styles.wrapper}
         style={{
-          "--color--background": "#ff00ff",
+          "--color--background": "var(--color--white)",
         }}
       >
         <Canvas dpr={[1, 2]} {...props}>
