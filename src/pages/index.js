@@ -15,8 +15,21 @@ const geistMono = localFont({
 
 export default function Home() {
   return (
-    <>
-      <div>Homepage</div>
-    </>
+    <main
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        paddingLeft: "100px",
+      }}
+    >
+      {/* <Image
+        src="/assets/2stones.png"
+        alt="Two stones"
+        width={666 * 2}
+        height={375 * 2}
+      /> */}
+    </main>
   );
 }

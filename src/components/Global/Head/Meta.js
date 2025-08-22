@@ -4,9 +4,9 @@ function Meta(props) {
   const meta = {};
 
   const defaults = {
-    site: meta?.title ?? "2024 starter jason",
+    site: meta?.title ?? "Solarbeam Kingdom",
     title: "",
-    description: meta?.description ?? "pages router starter jason",
+    description: meta?.description ?? "Solarbeam Kingdom",
     image: `/favicons/preview.png`,
   };
 

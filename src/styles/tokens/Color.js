@@ -2,8 +2,8 @@
 const css = String.raw;
 
 const ColorValues = {
-  black: "#000000",
-  white: "#ffffff",
+  black: "#19171A",
+  white: "#e0e0e0",
   grey: "#f5f5f5",
   pink: "#fe1295",
 };

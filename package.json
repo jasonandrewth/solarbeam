@@ -10,11 +10,17 @@
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
+    "@react-three/drei": "^10.7.3",
+    "@react-three/fiber": "^9.3.0",
+    "@react-three/postprocessing": "^3.0.4",
     "framer-motion": "^11.11.1",
     "glslify-loader": "^2.0.0",
-    "next": "14.2.14",
+    "next": "^15.5.0",
     "raw-loader": "^4.0.2",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "r3f-perf": "^7.2.3"
   }
 }
