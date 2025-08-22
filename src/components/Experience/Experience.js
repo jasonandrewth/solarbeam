@@ -1,6 +1,13 @@
 import { Suspense, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import {
+  Bloom,
+  DepthOfField,
+  EffectComposer,
+  Noise,
+  Vignette,
+} from "@react-three/postprocessing";
 import * as THREE from "three";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
@@ -48,6 +55,17 @@ const Experience = () => {
       >
         <Stone />
       </Suspense>
+
+      <EffectComposer>
+        {/* <Bloom
+          intensity={0.3}
+          luminanceThreshold={0}
+          luminanceSmoothing={0.9}
+          height={300}
+        /> */}
+        {/* <Noise opacity={0.2} /> */}
+        {/* <Vignette eskil={false} offset={0.1} darkness={1.1} /> */}
+      </EffectComposer>
     </>
   );
 };

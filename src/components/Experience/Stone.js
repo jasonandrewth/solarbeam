@@ -1,12 +1,16 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-
+import FakeGlowMaterial from "./FakeGlowMaterial";
 const MODEL_URL = "/assets/models/mahjong2.glb";
 
 const Stone = () => {
   const { scene } = useGLTF(MODEL_URL);
+
+  const groupRef = useRef(null);
+  const glowRef = useRef();
+  const [hovered, setHovered] = useState(false);
 
   // Assign a fresh MeshStandardMaterial with a random color to each mesh once on mount
   useLayoutEffect(() => {
@@ -76,15 +80,40 @@ const Stone = () => {
 
   useFrame((state, delta) => {
     const { clock } = state;
-    scene.rotation.z = clock.elapsedTime * -0.5;
+
+    if (groupRef.current) {
+      groupRef.current.rotation.z = clock.elapsedTime * -0.5;
+    }
+    if (glowRef.current) {
+      glowRef.current.material.opacity = THREE.MathUtils.lerp(
+        glowRef.current.material.opacity,
+        hovered ? 0.4 : 0,
+        0.1
+      );
+    }
+
+    console.log(hovered, glowRef.current);
   });
 
   return (
-    <primitive
+    <group
+      ref={groupRef}
       position={[0, 0, 1]}
       rotation={[Math.PI * 0.5, 0, 0]}
-      object={scene}
-    />
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+    >
+      <primitive object={scene} />
+      <mesh scale={[1, 1, 0.5]} ref={glowRef}>
+        <sphereGeometry args={[3]} />
+        <FakeGlowMaterial
+          glowColor="#00ff00"
+          glowInternalRadius={5}
+          glowSharpness={0}
+          opacity={0.0}
+        />
+      </mesh>
+    </group>
   );
 };
 
