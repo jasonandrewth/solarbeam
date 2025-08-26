@@ -53,7 +53,10 @@ const Experience = () => {
           </mesh>
         }
       >
-        <Stone />
+        <group>
+          <Stone position={-1.5} url="/assets/models/mahjong2.glb" />
+          <Stone position={1.5} />
+        </group>
       </Suspense>
 
       <EffectComposer>

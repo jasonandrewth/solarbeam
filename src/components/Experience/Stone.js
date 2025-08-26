@@ -3,10 +3,10 @@ import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import FakeGlowMaterial from "./FakeGlowMaterial";
-const MODEL_URL = "/assets/models/mahjong2.glb";
+const MODEL_URL = "/assets/models/mahjongborderinset.glb";
 
-const Stone = () => {
-  const { scene } = useGLTF(MODEL_URL);
+const Stone = ({ position, url = MODEL_URL }) => {
+  const { scene } = useGLTF(url);
 
   const groupRef = useRef(null);
   const glowRef = useRef();
@@ -92,13 +92,13 @@ const Stone = () => {
       );
     }
 
-    console.log(hovered, glowRef.current);
+    // console.log(hovered, glowRef.current);
   });
 
   return (
     <group
       ref={groupRef}
-      position={[0, 0, 1]}
+      position={[position, 0, 1]}
       rotation={[Math.PI * 0.5, 0, 0]}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
