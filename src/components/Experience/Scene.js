@@ -36,7 +36,13 @@ export default function Scene({ ...props }) {
           "--color--background": "var(--color--white)",
         }}
       >
-        <Canvas dpr={[1, 2]} {...props}>
+        <Canvas
+          shadows
+          gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
+          camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
+          {...props}
+        >
+          {/* <Canvas dpr={[1, 2]} {...props}> */}
           {showPerf && <Perf />}
           <Experience />
           {/* <mesh>

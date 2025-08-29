@@ -8,10 +8,12 @@ import {
   Noise,
   Vignette,
 } from "@react-three/postprocessing";
+import { Physics, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
 import Stone from "./Stone";
+import PhysicsTest from "./PhysicsTest";
 
 const Experience = () => {
   const isReady = useRef(false);
@@ -44,21 +46,23 @@ const Experience = () => {
         castShadow
       />
       {isMobile && <OrbitControls />}
+      <Physics debug={false} gravity={[0, 0, 0]}>
+        <Suspense
+          fallback={
+            <mesh position-y={0.0} scale={[2, 3, 2]}>
+              <boxGeometry args={[1, 1, 1, 2, 2, 2]} />
+              <meshBasicMaterial wireframe color="red" />
+            </mesh>
+          }
+        >
+          <group>
+            <Stone position={-1.5} url="/assets/models/mahjong2.glb" />
+            {/* <Stone position={1.5} /> */}
+          </group>
+        </Suspense>
 
-      <Suspense
-        fallback={
-          <mesh position-y={0.0} scale={[2, 3, 2]}>
-            <boxGeometry args={[1, 1, 1, 2, 2, 2]} />
-            <meshBasicMaterial wireframe color="red" />
-          </mesh>
-        }
-      >
-        <group>
-          <Stone position={-1.5} url="/assets/models/mahjong2.glb" />
-          <Stone position={1.5} />
-        </group>
-      </Suspense>
-
+        <PhysicsTest />
+      </Physics>
       <EffectComposer>
         {/* <Bloom
           intensity={0.3}

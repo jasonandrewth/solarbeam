@@ -1,16 +1,24 @@
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, DragControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
+import { CuboidCollider, RigidBody } from "@react-three/rapier";
 import FakeGlowMaterial from "./FakeGlowMaterial";
+import DraggableRigidBody from "./DraggableRigidBody";
 const MODEL_URL = "/assets/models/mahjongborderinset.glb";
 
 const Stone = ({ position, url = MODEL_URL }) => {
-  const { scene } = useGLTF(url);
+  const { scene, nodes } = useGLTF(url);
 
   const groupRef = useRef(null);
   const glowRef = useRef();
   const [hovered, setHovered] = useState(false);
+  const rbRef = useRef(null);
+
+  const velocityRef = useRef(new THREE.Vector3());
+  const lastPosRef = useRef(new THREE.Vector3());
+  const lastTimeRef = useRef(0);
+  const draggingRef = useRef(false);
 
   // Assign a fresh MeshStandardMaterial with a random color to each mesh once on mount
   useLayoutEffect(() => {
@@ -74,16 +82,26 @@ const Stone = ({ position, url = MODEL_URL }) => {
         child.castShadow = true;
         child.receiveShadow = true;
         if (oldMat && typeof oldMat.dispose === "function") oldMat.dispose();
+
+        console.log(child.position, child.name, "pos");
       }
     });
   }, [scene]);
 
-  useFrame((state, delta) => {
-    const { clock } = state;
+  useEffect(() => {
+    const top = nodes.TopBase001;
+    const middle = nodes.FirstStoneMiddle002;
+    const bottom = nodes.FirstStoneBottom004;
+    const symbols = [
+      nodes["symbol-1002"],
+      nodes["symbol-2002"],
+      nodes["symbol-3002"],
+      nodes["SYMBOL-4002"],
+    ];
+    console.log("nodes here", symbols);
+  }, [nodes]);
 
-    if (groupRef.current) {
-      groupRef.current.rotation.z = clock.elapsedTime * -0.5;
-    }
+  useFrame(() => {
     if (glowRef.current) {
       glowRef.current.material.opacity = THREE.MathUtils.lerp(
         glowRef.current.material.opacity,
@@ -91,29 +109,53 @@ const Stone = ({ position, url = MODEL_URL }) => {
         0.1
       );
     }
-
-    // console.log(hovered, glowRef.current);
   });
 
+  const DraggableRigidBodyProps = {
+    rigidBodyProps: {
+      gravityScale: 3.5,
+      linearDamping: 5,
+      angularDamping: 0.2,
+    },
+    boundingBox: [
+      [-8, 8],
+      [0.5, 8],
+      [-8, 8],
+    ],
+    dragControlsProps: {
+      preventOverlap: true,
+    },
+  };
+
+  // return <mesh geometry={scene.children[0].children[0].geometry}></mesh>;
+
   return (
-    <group
-      ref={groupRef}
-      position={[position, 0, 1]}
-      rotation={[Math.PI * 0.5, 0, 0]}
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-    >
-      <primitive object={scene} />
-      <mesh scale={[1, 1, 0.5]} ref={glowRef}>
-        <sphereGeometry args={[3]} />
-        <FakeGlowMaterial
-          glowColor="#00ff00"
-          glowInternalRadius={5}
-          glowSharpness={0}
-          opacity={0.0}
-        />
-      </mesh>
-    </group>
+    // <DragControls
+    //   transformGroup
+    //   onDragStart={handleDragStart}
+    //   onDrag={handleDrag}
+    //   onDragEnd={handleDragEnd}
+    // >
+    <RigidBody>
+      <group
+        ref={groupRef}
+        rotation={[Math.PI * 0.5, 0, 0]}
+        onPointerOver={() => setHovered(true)}
+        onPointerOut={() => setHovered(false)}
+      >
+        <primitive object={scene} />
+        {/* <mesh scale={[1, 1, 0.5]} ref={glowRef}>
+          <sphereGeometry args={[3]} />
+          <FakeGlowMaterial
+            glowColor="#00ff00"
+            glowInternalRadius={5}
+            glowSharpness={0}
+            opacity={0.0}
+          />
+        </mesh> */}
+      </group>
+    </RigidBody>
+    // </DragControls>
   );
 };
 
