@@ -13,25 +13,25 @@ const Type = css`
     //p1
     --type--scale---1: 0.75rem; // 0.7777
     //p2
-    --type--scale---0: 1rem; // 1
+    --type--scale---0: 1rem; // 12px
     //h5
-    --type--scale--1: 1.38rem; // 1.388
+    --type--scale--1: 1.16rem; // 14px
     //h4
-    --type--scale--2: 1.55rem; // 1.55
+    --type--scale--2: 1.33rem; // 16px
     //h3
     --type--scale--3: 2rem; // 3
     //h2
-    --type--scale--4: 2.66rem; // 3.75
+    --type--scale--4: 3.33rem; // 40px
     //h1
-    --type--scale--5: 3.75rem; // 4.72
+    --type--scale--5: 4.16rem; // 50px
 
     /*
      * Fluid Size
      */
     --fluid--min-vw: 1380;
-    --type--base-size: 14;
+    --type--base-size: 12;
     --type--size: 1;
-    --type--max--size: 24;
+    --type--max--size: 14;
 
     /**
      * Line Height
@@ -61,17 +61,17 @@ const Type = css`
     --type--spacing--3: 0.06em;
 
     @media ${MediaQueries.mobile} {
-      --type--base-size: 12;
+      --type--base-size: 11;
 
       --type--scale---2: 0.5rem;
       //p1
-      --type--scale---1: 0.75rem; // 0.7777
+      --type--scale---1: 0.7rem; // 0.7777
       //p2
       --type--scale---0: 1rem; // 1
       //h5
-      --type--scale--1: 1.25rem; // 1.388
+      --type--scale--1: 1.27rem; // 14px
       //h4
-      --type--scale--2: 1.75rem; // 1.55
+      --type--scale--2: 1.45rem; // 16px
       //h3
       --type--scale--3: 2rem; // 3
       //h2
@@ -84,6 +84,10 @@ const Type = css`
   *,
   *::before,
   *::after {
+    font-family: var(--font-sans), Helvetica, Arial, sans-serif;
+  }
+
+  html {
     font-size: min(
       calc(var(--type--max--size) * 1px),
       max(
@@ -91,11 +95,12 @@ const Type = css`
         calc(var(--type--base-size) / var(--fluid--min-vw) * 100vw)
       )
     );
-  }
 
-  html {
     line-height: var(--type--lineheight--0);
 
+    line-height: var(--type--lineheight--1);
+    font-weight: var(--type--weight--regular);
+    letter-spacing: var(--type--spacing--1);
     font-kerning: normal;
     text-size-adjust: 100%;
 

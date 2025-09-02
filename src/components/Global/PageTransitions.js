@@ -1,3 +1,7 @@
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { MediaQueries } from "@/styles/mixins/MediaQueries";
+
 import { useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -92,19 +96,28 @@ const PageTransitions = ({ children }) => {
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      <motion.div
+      <motion.main
         initial="initial"
         animate="enter"
         exit="exit"
         key={pathname}
         variants={TransitionSetting}
+        css={styles.main}
         // transition={{ duration: 0.5 }}
         // style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
       >
         {children}
-      </motion.div>
+      </motion.main>
     </AnimatePresence>
   );
+};
+
+const styles = {
+  main: css`
+    z-index: 1;
+    padding: var(--gap-m);
+    font-size: var(--type--scale---0);
+  `,
 };
 
 export default PageTransitions;

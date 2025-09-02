@@ -22,6 +22,8 @@ export default function Home() {
         alignItems: "center",
         minHeight: "100vh",
         paddingLeft: "100px",
+        maxHeight: "100vh",
+        overflow: "hidden",
       }}
     >
       {/* <Image

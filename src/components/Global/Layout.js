@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { Global } from "@emotion/react";
 import { Global as GlobalStyles } from "@/styles/Global";
+import { css } from "@emotion/react";
+import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
 // import localFont from "next/font/local";
 import { Roboto } from "next/font/google";
@@ -16,6 +18,7 @@ import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 
 import Scene from "@/components/Experience/Scene";
+import { usePathname } from "next/navigation";
 
 // const Scene = dynamic(() => import("@/components/Experience/Scene"), {
 //   ssr: false,
@@ -40,6 +43,8 @@ const roboto = Roboto({
 const Layout = ({ children }) => {
   const ref = useRef(null);
 
+  const pathname = usePathname();
+
   return (
     <>
       <Meta />
@@ -51,19 +56,41 @@ const Layout = ({ children }) => {
         className={roboto.className}
         style={{
           position: "relative",
-          minHeight: "100vh",
-          minWidth: "100vw",
           overflow: "auto",
           touchAction: "auto",
         }}
       >
         <Header />
+        <div
+          css={styles.backdrop}
+          data-visible={pathname === "/about" || pathname === "/archive"}
+        />
         <PageTransitions>{children}</PageTransitions>
         <Scene eventSource={ref} eventPrefix="client" />
         <Footer />
       </main>
     </>
   );
+};
+
+const styles = {
+  backdrop: css`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 0.25s linear;
+
+    &[data-visible="true"] {
+      opacity: 1;
+    }
+  `,
 };
 
 export default Layout;

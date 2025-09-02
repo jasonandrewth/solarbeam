@@ -1,10 +1,11 @@
 import { Suspense, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import {
   Bloom,
   DepthOfField,
   EffectComposer,
+  N8AO,
   Noise,
   Vignette,
 } from "@react-three/postprocessing";
@@ -14,6 +15,7 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
 import Stone from "./Stone";
 import PhysicsTest from "./PhysicsTest";
+import BGPlane from "./BGPlane";
 
 const Experience = () => {
   const isReady = useRef(false);
@@ -35,13 +37,11 @@ const Experience = () => {
   return (
     <>
       {/* Studio lighting setup */}
-      <ambientLight intensity={0.4} />
-      <directionalLight position={[5, 5, 5]} intensity={1.2} castShadow />
-      <directionalLight position={[-5, 5, 5]} intensity={0.8} />
+      <ambientLight intensity={0.66} />
       <spotLight
-        position={[0, 10, 5]}
-        angle={0.3}
-        penumbra={0.5}
+        position={[10, 10, 10]}
+        angle={0.15}
+        penumbra={1}
         intensity={1}
         castShadow
       />
@@ -59,11 +59,47 @@ const Experience = () => {
             <Stone position={-1.5} url="/assets/models/mahjong2.glb" />
             {/* <Stone position={1.5} /> */}
           </group>
-        </Suspense>
 
-        <PhysicsTest />
+          <PhysicsTest />
+        </Suspense>
       </Physics>
-      <EffectComposer>
+
+      {/* <BGPlane z={-100} color="#0a8f4d" opacity={0.85} /> */}
+
+      <Environment resolution={256}>
+        <group rotation={[-Math.PI / 3, 0, 1]}>
+          <Lightformer
+            form="circle"
+            intensity={4}
+            rotation-x={Math.PI / 2}
+            position={[0, 5, -9]}
+            scale={2}
+          />
+          <Lightformer
+            form="circle"
+            intensity={2}
+            rotation-y={Math.PI / 2}
+            position={[-5, 1, -1]}
+            scale={2}
+          />
+          <Lightformer
+            form="circle"
+            intensity={2}
+            rotation-y={Math.PI / 2}
+            position={[-5, -1, -1]}
+            scale={2}
+          />
+          <Lightformer
+            form="circle"
+            intensity={2}
+            rotation-y={-Math.PI / 2}
+            position={[10, 1, 0]}
+            scale={8}
+          />
+        </group>
+      </Environment>
+
+      <EffectComposer disableNormalPass multisampling={8}>
         {/* <Bloom
           intensity={0.3}
           luminanceThreshold={0}
@@ -71,7 +107,7 @@ const Experience = () => {
           height={300}
         /> */}
         {/* <Noise opacity={0.2} /> */}
-        {/* <Vignette eskil={false} offset={0.1} darkness={1.1} /> */}
+        <N8AO distanceFalloff={1} aoRadius={1} intensity={4} />
       </EffectComposer>
     </>
   );

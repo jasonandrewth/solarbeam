@@ -39,7 +39,7 @@ export default function Scene({ ...props }) {
         <Canvas
           shadows
           gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
-          camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 100 }}
+          camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 150 }}
           {...props}
         >
           {/* <Canvas dpr={[1, 2]} {...props}> */}

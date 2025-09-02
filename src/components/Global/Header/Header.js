@@ -4,10 +4,12 @@ import { MediaQueries } from "@/styles/mixins/MediaQueries";
 import Link from "next/link";
 
 import Logo from "@/Icons/Logo";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
+  const pathname = usePathname();
   return (
-    <header css={styles.header}>
+    <header data-about={pathname === "/about"} css={styles.header}>
       <nav aria-label="Main" css={styles.nav}>
         <div css={styles.menu}>
           <div css={styles.leftMenu}>
@@ -24,7 +26,7 @@ const Header = () => {
             </li>
           </div>
 
-          <Link href={"/"} css={styles.logo}>
+          <Link href={"/"} data-about={pathname === "/about"} css={styles.logo}>
             {/* <div style={{ fontWeight: "900" }}>solarbeam kingdom</div> */}
             <Logo />
           </Link>
@@ -43,17 +45,25 @@ export default Header;
 
 const styles = {
   header: css`
-    position: fixed;
+    position: relative;
     top: 0;
     left: 0;
     width: 100%;
     /* background-color: red; */
-    padding: var(--gap-s) var(--gap-m);
+    padding: var(--gap-s) var(--gap-l);
     z-index: 999;
 
     * {
       text-transform: uppercase;
       font-size: var(--type--scale--0);
+      color: var(--color--black);
+      transition: color 0.25s linear;
+    }
+
+    &[data-about="true"] {
+      * {
+        color: var(--color--white);
+      }
     }
 
     @media ${MediaQueries.medium} {
@@ -72,8 +82,16 @@ const styles = {
     opacity: 1 !important;
 
     svg {
-      width: 30vw;
+      width: 20vw;
       height: auto;
+      color: var(--color--black);
+      transition: color 0.25s linear;
+    }
+
+    &[data-about="true"] {
+      svg {
+        color: var(--color--white);
+      }
     }
 
     @media ${MediaQueries.mobile} {
@@ -90,7 +108,7 @@ const styles = {
     width: 100%;
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: var(--gap-m);
 
     a {
       transition: opacity linear 0.25s;

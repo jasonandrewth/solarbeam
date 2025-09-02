@@ -14,9 +14,6 @@ const Footer = () => {
           css={styles.icon}
         />
       </div>
-      <a css={styles.email} href="mailto:info@solarbeamkingdom.com">
-        info@solarbeamkingdom.com
-      </a>
     </footer>
   );
 };
@@ -37,7 +34,8 @@ const styles = {
     z-index: 999;
   `,
   left: css`
-    background-color: red;
+    /* background-color: red; */
+    padding-bottom: var(--gap-m);
   `,
   icon: css`
     display: block;
