@@ -250,7 +250,7 @@ const Stone2 = memo(function Stone2({
   const baubleMaterial = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: new THREE.Color(0xff0000),
+        color: new THREE.Color(Math.random(), Math.random(), Math.random()),
         roughness: 0.01,
         metalness: 0.2,
         transparent: false,

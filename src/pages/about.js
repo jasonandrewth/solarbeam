@@ -81,6 +81,7 @@ const styles = {
     z-index: 1;
     color: rgba(255, 255, 255, 0.6);
     @media ${MediaQueries.mobile} {
+      transform: none;
       padding-top: 0;
       width: 100%;
     }
