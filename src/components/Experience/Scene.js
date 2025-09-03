@@ -53,7 +53,7 @@ export default function Scene({ ...props }) {
           // shadows
           gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
           camera={{
-            position: [0, 0, isMobile ? 30 : 20],
+            position: [0, 0, isMobile ? 25 : 20],
             fov: 32.5,
             near: 1,
             far: 150,
