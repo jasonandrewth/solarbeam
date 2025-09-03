@@ -8,13 +8,24 @@ import { Perf } from "r3f-perf";
 import { Canvas } from "@react-three/fiber";
 
 import Experience from "./Experience";
+import { PerformanceMonitor } from "@react-three/drei";
 
 export default function Scene({ ...props }) {
   const path = usePathname();
 
   const imgRef = useRef(null);
 
+  const [dpr, setDpr] = useState(1.5);
+  const [frameloop, setFrameloop] = useState("always");
   const [showPerf, setShowPerf] = useState(false);
+
+  useEffect(() => {
+    const handleVisibilityChange = () =>
+      setFrameloop(document.hidden ? "never" : "always");
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () =>
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -37,13 +48,25 @@ export default function Scene({ ...props }) {
         }}
       >
         <Canvas
-          shadows
+          dpr={dpr}
+          // shadows
           gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
           camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 150 }}
+          frameloop={frameloop}
+          // frameloop="demand"
           {...props}
         >
           {/* <Canvas dpr={[1, 2]} {...props}> */}
           {showPerf && <Perf />}
+
+          <PerformanceMonitor
+            onIncline={() => setDpr(2)}
+            bounds={() => [30, 500]} // frame/second limit to trigger functions
+            flipflops={1} // maximum changes before onFallback
+            onDecline={() => {
+              setDpr(dpr * 0.8); // lower dpr by 20%
+            }}
+          />
           <Experience />
           {/* <mesh>
                   <planeGeometry

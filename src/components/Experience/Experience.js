@@ -14,7 +14,7 @@ import * as THREE from "three";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
 import Stone from "./Stone";
-import PhysicsTest from "./PhysicsTest";
+import PhysicsTest, { StonePrimitive } from "./PhysicsTest";
 import BGPlane from "./BGPlane";
 
 const Experience = () => {
@@ -43,10 +43,10 @@ const Experience = () => {
         angle={0.15}
         penumbra={1}
         intensity={1}
-        castShadow
+        // castShadow
       />
       {isMobile && <OrbitControls />}
-      <Physics debug={false} gravity={[0, 0, 0]}>
+      <Physics debug={false} timeStep={1 / 30} gravity={[0, 0, 0]}>
         <Suspense
           fallback={
             <mesh position-y={0.0} scale={[2, 3, 2]}>
@@ -55,10 +55,8 @@ const Experience = () => {
             </mesh>
           }
         >
-          <group>
-            <Stone position={-1.5} url="/assets/models/mahjong2.glb" />
-            {/* <Stone position={1.5} /> */}
-          </group>
+          {/* <Stone position={-1.5} url="/assets/models/mahjong2.glb" /> */}
+          <StonePrimitive url="/assets/models/mahjong2.glb" />
 
           <PhysicsTest />
         </Suspense>

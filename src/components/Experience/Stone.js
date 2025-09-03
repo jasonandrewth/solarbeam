@@ -79,8 +79,6 @@ const Stone = ({ position, url = MODEL_URL }) => {
           child.material = materialGloss;
         }
 
-        child.castShadow = true;
-        child.receiveShadow = true;
         if (oldMat && typeof oldMat.dispose === "function") oldMat.dispose();
 
         console.log(child.position, child.name, "pos");

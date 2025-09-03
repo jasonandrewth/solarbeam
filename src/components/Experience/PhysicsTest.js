@@ -7,7 +7,16 @@ import {
   BallCollider,
   CylinderCollider,
 } from "@react-three/rapier";
-import { useMemo, useRef, useState, Suspense, useCallback, memo } from "react";
+import {
+  useMemo,
+  useRef,
+  useState,
+  Suspense,
+  useCallback,
+  memo,
+  useLayoutEffect,
+  useEffect,
+} from "react";
 
 import DraggableRigidBody from "./DraggableRigidBody";
 
@@ -15,7 +24,7 @@ const MODEL_URL = "/assets/models/mahjongborderinset.glb";
 const MODEL_URL2 = "/assets/models/mahjong2.glb";
 
 const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
-const baubles = [...Array(18)].map(() => ({
+const baubles = [...Array(12)].map(() => ({
   scale: [0.75, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)],
 }));
 
@@ -35,8 +44,6 @@ const glassMat = new THREE.MeshPhysicalMaterial({
   // Crisp, glassy surface
   roughness: 0.3,
   metalness: 0.0,
-  castShadow: true,
-  receiveShadow: true,
 
   //   envMapIntensity: 2.0,
 
@@ -62,44 +69,21 @@ const materialGloss = new THREE.MeshStandardMaterial({
   polygonOffsetUnits: 1,
   depthWrite: true,
   depthTest: true,
-  castShadow: true,
-  receiveShadow: true,
 });
 
 const PhysicsTest = () => {
   // Z plane where you want the screen bounds (same Z as the moving object)
   const planeZ = 0;
 
+  const { scene, nodes } = useGLTF(MODEL_URL);
+
   const { camera, size, viewport } = useThree();
+
   // Compute the current viewport (in world units) at planeZ
   const vp = useMemo(
     () => viewport.getCurrentViewport(camera, [0, 0, planeZ], size),
     [camera, size, viewport]
   );
-
-  // Half extents for convenience
-  const halfW = vp.width / 2;
-  const halfH = vp.height / 2;
-
-  // Wall thickness (very thin) and depth in Z for the colliders
-  const THICK = 0.02; // thin in the normal direction of each wall
-  const DEPTH = 2; // extend a bit in Z so fast objects don't tunnel
-
-  const DraggableRigidBodyProps = {
-    rigidBodyProps: {
-      gravityScale: 3.5,
-      linearDamping: 5,
-      angularDamping: 0.2,
-    },
-    boundingBox: [
-      [-8, 8],
-      [0.5, 8],
-      [-8, 8],
-    ],
-    dragControlsProps: {
-      preventOverlap: true,
-    },
-  };
 
   return (
     <>
@@ -118,42 +102,50 @@ const PhysicsTest = () => {
           return <Stone2 key={i} {...props} />;
         })} */}
       </Suspense>
-
-      {/* Moving cube */}
-      {/* <RigidBody>
-        <mesh position={[-1, 0, planeZ]} scale={[1, 1, 1]} castShadow receiveShadow>
-          <boxGeometry args={[1, 1, 1, 2, 2, 2]} />
-          <meshBasicMaterial color="blue" />
-        </mesh>
-      </RigidBody>
-
-      <Suspense fallback={null}>
-        <StonePrimitive />
-      </Suspense> */}
-      {/* 
-      <DraggableRigidBody
-        // {...DraggableRigidBodyProps}
-        visibleMesh={
-          <mesh position={[1, 0, planeZ]} castShadow receiveShadow>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshBasicMaterial visible={true} />
-          </mesh>
-        }
-      /> */}
     </>
   );
 };
 
 export default PhysicsTest;
 
-function StonePrimitive() {
-  const { scene } = useGLTF(MODEL_URL);
+export const StonePrimitive = ({ url }) => {
+  const { scene } = useGLTF(url);
+
+  const groupRef = useRef(null);
+  // Assign a fresh MeshStandardMaterial with a random color to each mesh once on mount
+  useLayoutEffect(() => {
+    scene.traverse((child) => {
+      if (child.isMesh) {
+        console.log(child);
+        const oldMat = child.material;
+
+        console.log(child.name);
+
+        if (child.name.toLowerCase().includes("bottom")) {
+          child.material = glassMat;
+        } else if (child.name.toLowerCase().includes("middle")) {
+          child.material = material;
+        } else if (child.name.toLowerCase().includes("top")) {
+          child.material = glassMat;
+        } else {
+          child.material = material;
+        }
+
+        if (oldMat && typeof oldMat.dispose === "function") oldMat.dispose();
+
+        console.log(child.position, child.name, "pos");
+      }
+    });
+  }, [scene]);
+
   return (
     <RigidBody>
-      <primitive object={scene} />
+      <group ref={groupRef} rotation={[Math.PI * 0.5, 0, 0]}>
+        <primitive object={scene} />
+      </group>
     </RigidBody>
   );
-}
+};
 
 const Stone1 = memo(function Stone1({
   vec = new THREE.Vector3(),
@@ -178,8 +170,6 @@ const Stone1 = memo(function Stone1({
         transparent: false,
         depthWrite: true,
         depthTest: true,
-        castShadow: true,
-        receiveShadow: true,
       }),
     []
   );
@@ -205,10 +195,10 @@ const Stone1 = memo(function Stone1({
       friction={0.2}
       position={[r(20), r(20) - 25, r(20) - 10]}
       ref={api}
-      //   colliders={false}
+      colliders={false}
       dispose={null}
     >
-      {/* <CuboidCollider position={[0, 0, 0]} args={[1, 2, 0.4]} /> */}
+      <CuboidCollider position={[0, 0, 0]} args={[1, 0.6, 1]} />
       {/* <primitive object={stoneScene} /> */}
 
       {/* <mesh
@@ -218,7 +208,7 @@ const Stone1 = memo(function Stone1({
         geometry={sphereGeometry}
         material={baubleMaterial}
       /> */}
-      <group castShadow receiveShadow>
+      <group>
         <mesh scale={1} geometry={middle.geometry} material={glassMat} />
         <mesh scale={1} geometry={bottom.geometry} material={material} />
         <mesh scale={1} geometry={top.geometry} material={glassMat} />
@@ -254,8 +244,6 @@ const Stone2 = memo(function Stone2({
         roughness: 0.01,
         metalness: 0.2,
         transparent: false,
-        castShadow: true,
-        receiveShadow: true,
       }),
     []
   );
@@ -291,10 +279,10 @@ const Stone2 = memo(function Stone2({
       friction={0.2}
       position={[r(20), r(20) - 25, r(20) - 10]}
       ref={api}
-      //   colliders={false}
+      colliders={false}
       dispose={null}
     >
-      {/* <CuboidCollider position={[0, 0, 0]} args={[1, 2, 0.4]} /> */}
+      <CuboidCollider position={[0, 0, 0]} args={[1, 0.6, 1]} />
       {/* <primitive object={stoneScene} /> */}
 
       {/* <mesh
@@ -304,7 +292,7 @@ const Stone2 = memo(function Stone2({
         geometry={sphereGeometry}
         material={baubleMaterial}
       /> */}
-      <group castShadow receiveShadow>
+      <group c>
         <mesh scale={1} geometry={middle.geometry} material={glassMat} />
         <mesh scale={1} geometry={bottom.geometry} material={material} />
         <mesh scale={1} geometry={top.geometry} material={glassMat} />
@@ -369,8 +357,6 @@ const Pointer = memo(function Pointer({ vec = new THREE.Vector3() }) {
         onPointerUp={onUp}
         onPointerCancel={onCancel}
         onPointerOut={onOut}
-        castShadow
-        receiveShadow
       >
         <sphereGeometry args={[1, 16, 16]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
