@@ -10,7 +10,19 @@ const Header = () => {
   const pathname = usePathname();
   return (
     <header data-about={pathname === "/about"} css={styles.header}>
-      <nav aria-label="Main" css={styles.nav}>
+      <Link href={"/"} data-about={pathname === "/about"} css={styles.logo}>
+        {/* <div style={{ fontWeight: "900" }}>solarbeam kingdom</div> */}
+        <Logo />
+      </Link>
+
+      <Link
+        href={pathname === "/about" ? "/" : "/about"}
+        data-about={pathname === "/about"}
+        css={styles.menuIcon}
+      >
+        +
+      </Link>
+      {/* <nav aria-label="Main" css={styles.nav}>
         <div css={styles.menu}>
           <div css={styles.leftMenu}>
             <li css={styles.hasSubnav}>
@@ -27,16 +39,16 @@ const Header = () => {
           </div>
 
           <Link href={"/"} data-about={pathname === "/about"} css={styles.logo}>
-            {/* <div style={{ fontWeight: "900" }}>solarbeam kingdom</div> */}
+         
             <Logo />
           </Link>
           <div css={styles.rightMenu}>
             <li>
-              <Link href={"/about"}>About</Link>
+              <Link href={"/about"}>+</Link>
             </li>
           </div>
         </div>
-      </nav>
+      </nav> */}
     </header>
   );
 };
@@ -50,12 +62,17 @@ const styles = {
     left: 0;
     width: 100%;
     /* background-color: red; */
-    padding: var(--gap-s) var(--gap-l);
+    padding: var(--gap-l);
     z-index: 999;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     * {
       text-transform: uppercase;
-      font-size: var(--type--scale--0);
+      font-size: 64px;
+      line-height: 1rem;
       color: var(--color--black);
       transition: color 0.25s linear;
     }
@@ -68,21 +85,34 @@ const styles = {
 
     @media ${MediaQueries.medium} {
       /* min-height: 65vh; */
+      * {
+        display: block;
+        line-height: 0;
+        font-size: 32px;
+      }
     }
   `,
   nav: css`
     position: relative;
   `,
+  menuIcon: css`
+    transform: rotate(0);
+    transition: all 0.25s linear;
+    &[data-about="true"] {
+      transform: rotate(45deg);
+    }
+  `,
   logo: css`
-    position: absolute;
+    /* position: absolute;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0; */
+    /* transform: translateX(-50%); */
 
     opacity: 1 !important;
 
     svg {
-      width: 20vw;
+      width: 16vw;
+      /* padding-top: var(--gap-s); */
       height: auto;
       color: var(--color--black);
       transition: color 0.25s linear;
@@ -159,5 +189,14 @@ const styles = {
   rightMenu: css`
     display: flex;
     align-items: center;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    * {
+      font-size: 64px;
+      line-height: 0;
+    }
   `,
 };

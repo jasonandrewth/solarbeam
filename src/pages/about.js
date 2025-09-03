@@ -3,6 +3,7 @@ import { css } from "@emotion/react";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
 import { useState } from "react";
+import ChevronDown from "@/Icons/Chevron";
 
 const AboutPage = () => {
   const [visible, setVisible] = useState(true);
@@ -45,6 +46,15 @@ const AboutPage = () => {
             Contact: info@solarbeamkingdom.com
           </a>
         </span>
+
+        <a
+          href="https://app.acuityscheduling.com/schedule.php?owner=36275697&ref=booking_button"
+          target="_blank"
+        >
+          <button css={styles.button}>
+            Schedule Appointment <ChevronDown />
+          </button>
+        </a>
       </div>
     </>
   );
@@ -74,7 +84,8 @@ const styles = {
   body: css`
     width: 50%;
     opacity: 1;
-    transform: translateX(50%);
+    /* transform: translateX(var(--gap-l)); */
+    /* padding-top: var(--gap-s); */
 
     /* user-select: none; */
     position: relative;
@@ -100,6 +111,38 @@ const styles = {
   contact: css`
     font-weight: 700;
     color: rgba(255, 255, 255, 0.8);
+  `,
+  button: css`
+    opacity: 1;
+
+    margin-top: var(--gap-m);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.8);
+    background-color: transparent;
+    /* color: var(--color--white); */
+    border: 0.75px solid #9b9b9b;
+    border-radius: 9999px;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    transition: opacity 0.25s linear;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    svg {
+      transform: rotate(-90deg);
+    }
+
+    @media ${MediaQueries.mobile} {
+      margin-top: var(--gap-l);
+      padding: 0.4rem 1rem;
+    }
   `,
 };
 

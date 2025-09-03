@@ -115,7 +115,7 @@ const PageTransitions = ({ children }) => {
 const styles = {
   main: css`
     z-index: 1;
-    padding: var(--gap-m);
+    padding: var(--gap-l);
     font-size: var(--type--scale---0);
   `,
 };
