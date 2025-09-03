@@ -67,7 +67,9 @@ const styles = {
 
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+
+    /* border: 1px solid green; */
 
     * {
       text-transform: uppercase;
@@ -109,6 +111,9 @@ const styles = {
     /* transform: translateX(-50%); */
 
     opacity: 1 !important;
+    /* border: 1px solid red; */
+
+    margin: 0;
 
     svg {
       width: 16vw;
@@ -126,8 +131,9 @@ const styles = {
 
     @media ${MediaQueries.mobile} {
       svg {
-        width: 200px;
+        width: 128px;
         height: auto;
+        padding: 0;
       }
     }
   `,
