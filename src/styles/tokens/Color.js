@@ -3,7 +3,7 @@ const css = String.raw;
 
 const ColorValues = {
   black: "#19171A",
-  white: "#e0e0e0",
+  white: "#f0ede1ff",
   grey: "#f5f5f5",
   pink: "#fe1295",
 };

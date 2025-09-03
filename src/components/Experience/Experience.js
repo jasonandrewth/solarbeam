@@ -45,7 +45,9 @@ const Experience = () => {
         intensity={1}
         // castShadow
       />
-      {isMobile && <OrbitControls />}
+      {isMobile && (
+        <OrbitControls enableDamping enablePan={false} enableZoom={false} />
+      )}
       <Physics debug={false} timeStep={1 / 30} gravity={[0, 0, 0]}>
         <Suspense
           fallback={

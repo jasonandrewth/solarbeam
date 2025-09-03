@@ -9,11 +9,12 @@ import { Canvas } from "@react-three/fiber";
 
 import Experience from "./Experience";
 import { PerformanceMonitor } from "@react-three/drei";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function Scene({ ...props }) {
   const path = usePathname();
 
-  const imgRef = useRef(null);
+  const isMobile = useMediaQuery(MediaQueries.mobile);
 
   const [dpr, setDpr] = useState(1.5);
   const [frameloop, setFrameloop] = useState("always");
@@ -51,7 +52,12 @@ export default function Scene({ ...props }) {
           dpr={dpr}
           // shadows
           gl={{ alpha: true, stencil: false, depth: false, antialias: false }}
-          camera={{ position: [0, 0, 20], fov: 32.5, near: 1, far: 150 }}
+          camera={{
+            position: [0, 0, isMobile ? 30 : 20],
+            fov: 32.5,
+            near: 1,
+            far: 150,
+          }}
           frameloop={frameloop}
           // frameloop="demand"
           {...props}

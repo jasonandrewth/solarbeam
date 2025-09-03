@@ -1,12 +1,7 @@
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
-import {
-  RigidBody,
-  CuboidCollider,
-  BallCollider,
-  CylinderCollider,
-} from "@react-three/rapier";
+import { RigidBody, CuboidCollider, BallCollider } from "@react-three/rapier";
 import {
   useMemo,
   useRef,
@@ -37,7 +32,7 @@ const glassMat = new THREE.MeshPhysicalMaterial({
   // Emerald-like green base
   color: green,
   // Physically based transmission/refraction
-  transparent: true,
+
   transmission: 0.8, // enable real refraction
   ior: 1.57, // emerald ~1.57
   thickness: 1.0, // controls refraction path length
@@ -54,37 +49,22 @@ const material = new THREE.MeshStandardMaterial({
   color: ivory,
   roughness: 0.9,
   metalness: 0.2,
-  castShadow: true,
-  receiveShadow: true,
 });
-const materialGloss = new THREE.MeshStandardMaterial({
-  color: green,
-  roughness: 0.01,
-  metalness: 0.2,
-  transparent: false,
-  depthWrite: true,
-  depthTest: true,
-  polygonOffset: true,
-  polygonOffsetFactor: 1,
-  polygonOffsetUnits: 1,
-  depthWrite: true,
-  depthTest: true,
-});
+// const materialGloss = new THREE.MeshStandardMaterial({
+//   color: green,
+//   roughness: 0.01,
+//   metalness: 0.2,
+//   transparent: false,
+//   depthWrite: true,
+//   depthTest: true,
+//   polygonOffset: true,
+//   polygonOffsetFactor: 1,
+//   polygonOffsetUnits: 1,
+//   depthWrite: true,
+//   depthTest: true,
+// });
 
 const PhysicsTest = () => {
-  // Z plane where you want the screen bounds (same Z as the moving object)
-  const planeZ = 0;
-
-  const { scene, nodes } = useGLTF(MODEL_URL);
-
-  const { camera, size, viewport } = useThree();
-
-  // Compute the current viewport (in world units) at planeZ
-  const vp = useMemo(
-    () => viewport.getCurrentViewport(camera, [0, 0, planeZ], size),
-    [camera, size, viewport]
-  );
-
   return (
     <>
       <Pointer />
@@ -116,10 +96,7 @@ export const StonePrimitive = ({ url }) => {
   useLayoutEffect(() => {
     scene.traverse((child) => {
       if (child.isMesh) {
-        console.log(child);
         const oldMat = child.material;
-
-        console.log(child.name);
 
         if (child.name.toLowerCase().includes("bottom")) {
           child.material = glassMat;
@@ -132,8 +109,6 @@ export const StonePrimitive = ({ url }) => {
         }
 
         if (oldMat && typeof oldMat.dispose === "function") oldMat.dispose();
-
-        console.log(child.position, child.name, "pos");
       }
     });
   }, [scene]);
@@ -173,19 +148,16 @@ const Stone1 = memo(function Stone1({
       }),
     []
   );
-
+  const tmp = new THREE.Vector3();
   useFrame((state, delta) => {
     if (!api.current) return;
     delta = Math.min(0.1, delta);
     api.current.applyImpulse(
-      vec
+      tmp
         .copy(api.current.translation())
         .normalize()
-        .multiply({
-          x: -50 * delta * scale,
-          y: -150 * delta * scale,
-          z: -50 * delta * scale,
-        })
+        .multiplyScalar(-delta * scale) // scale once
+        .multiply(new THREE.Vector3(50, 150, 50)) // or set(x,y,z)
     );
   });
   return (
@@ -258,18 +230,16 @@ const Stone2 = memo(function Stone2({
     nodes["SYMBOL-4002"],
   ];
 
+  const tmp = new THREE.Vector3();
   useFrame((state, delta) => {
     if (!api.current) return;
     delta = Math.min(0.1, delta);
     api.current.applyImpulse(
-      vec
+      tmp
         .copy(api.current.translation())
         .normalize()
-        .multiply({
-          x: -50 * delta * scale,
-          y: -150 * delta * scale,
-          z: -50 * delta * scale,
-        })
+        .multiplyScalar(-delta * scale) // scale once
+        .multiply(new THREE.Vector3(50, 150, 50)) // or set(x,y,z)
     );
   });
   return (
@@ -292,7 +262,7 @@ const Stone2 = memo(function Stone2({
         geometry={sphereGeometry}
         material={baubleMaterial}
       /> */}
-      <group c>
+      <group>
         <mesh scale={1} geometry={middle.geometry} material={glassMat} />
         <mesh scale={1} geometry={bottom.geometry} material={material} />
         <mesh scale={1} geometry={top.geometry} material={glassMat} />
@@ -328,16 +298,15 @@ const Pointer = memo(function Pointer({ vec = new THREE.Vector3() }) {
   const onOut = useCallback(() => setPressed(false), []);
 
   const ref = useRef();
+  const target = useRef(new THREE.Vector3());
   useFrame(({ mouse, viewport }) => {
     if (!ref.current) return;
-    vec.lerp(
-      {
-        x: (mouse.x * viewport.width) / 2,
-        y: (mouse.y * viewport.height) / 2,
-        z: 0,
-      },
-      0.2
+    target.current.set(
+      (mouse.x * viewport.width) / 2,
+      (mouse.y * viewport.height) / 2,
+      0
     );
+    vec.lerp(target.current, 0.2);
     ref.current.setNextKinematicTranslation(vec);
   });
   return (
@@ -364,3 +333,6 @@ const Pointer = memo(function Pointer({ vec = new THREE.Vector3() }) {
     </RigidBody>
   );
 });
+
+useGLTF.preload(MODEL_URL);
+useGLTF.preload(MODEL_URL2);
