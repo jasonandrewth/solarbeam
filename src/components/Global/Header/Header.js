@@ -117,7 +117,7 @@ const styles = {
     margin: 0;
 
     svg {
-      width: 64px;
+      width: 8vw;
       /* padding-top: var(--gap-s); */
       height: auto;
       color: var(--color--black);

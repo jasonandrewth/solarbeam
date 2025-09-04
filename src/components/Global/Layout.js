@@ -2,7 +2,6 @@
 import { Global } from "@emotion/react";
 import { Global as GlobalStyles } from "@/styles/Global";
 import { css } from "@emotion/react";
-import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
 // import localFont from "next/font/local";
 import { Roboto } from "next/font/google";
