@@ -220,9 +220,12 @@ const Stone2 = memo(function Stone2({
     []
   );
 
+  console.log("nodees", nodes);
+
   const top = nodes.TopBase001;
   const middle = nodes.FirstStoneBottom004;
   const bottom = nodes.FirstStoneMiddle002;
+  const logo = nodes.sblogo;
   const symbols = [
     nodes["symbol-1002"],
     nodes["symbol-2002"],
@@ -266,6 +269,12 @@ const Stone2 = memo(function Stone2({
         <mesh scale={1} geometry={middle.geometry} material={glassMat} />
         <mesh scale={1} geometry={bottom.geometry} material={material} />
         <mesh scale={1} geometry={top.geometry} material={glassMat} />
+        <mesh
+          position={[logo.position.x, logo.position.y, logo.position.z]}
+          geometry={logo.geometry}
+          material={baubleMaterial}
+          scale={logo.scale}
+        />
         {symbols.map((sym, idx) => {
           return (
             <mesh
