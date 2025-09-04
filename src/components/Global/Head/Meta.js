@@ -7,7 +7,7 @@ function Meta(props) {
     site: meta?.title ?? "Solarbeam Kingdom",
     title: "",
     description: meta?.description ?? "Solarbeam Kingdom",
-    image: `/favicons/preview.png`,
+    image: `/favicons/preview.jpg`,
   };
 
   //   console.info("Meta", meta, defaults, props);
