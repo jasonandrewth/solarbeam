@@ -1,4 +1,7 @@
-import Head from "next/head";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { MediaQueries } from "@/styles/mixins/MediaQueries";
+
 import Image from "next/image";
 import localFont from "next/font/local";
 
@@ -16,15 +19,37 @@ const geistMono = localFont({
 export default function Home() {
   return (
     <main
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        paddingLeft: "100px",
-        maxHeight: "100vh",
-        overflow: "hidden",
-      }}
+      css={css`
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        max-height: 100vh;
+        padding-left: 100px;
+        overflow: hidden;
+
+        /* Coming Soon label */
+        > span.comingSoon {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          letter-spacing: 0.08rem;
+          font-weight: 700;
+          opacity: 0.5;
+          top: 60vh; /* mobile */
+          font-size: 1.3rem; /* mobile */
+        }
+
+        /* Desktop adjustments */
+        @media (min-width: 768px) {
+          > span.comingSoon {
+            top: 64vh;
+            font-size: 2rem;
+            letter-spacing: 0.02rem;
+          }
+        }
+      `}
     >
       {/* <Image
         src="/assets/2stones.png"
@@ -32,6 +57,7 @@ export default function Home() {
         width={666 * 2}
         height={375 * 2}
       /> */}
+      <span className="comingSoon">COMING SOON</span>
     </main>
   );
 }
