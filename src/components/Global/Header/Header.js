@@ -87,6 +87,7 @@ const styles = {
 
     @media ${MediaQueries.medium} {
       /* min-height: 65vh; */
+      align-items: center;
       * {
         display: block;
         line-height: 0;
