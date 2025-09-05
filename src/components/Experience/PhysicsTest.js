@@ -21,6 +21,15 @@ const MODEL_URL2 = "/assets/models/mahjong2.glb";
 const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
 const baubles = [...Array(12)].map(() => ({
   scale: [0.75, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)],
+  color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+  mat: new THREE.MeshStandardMaterial({
+    color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+    roughness: 0.01,
+    metalness: 0.2,
+    transparent: false,
+    depthWrite: true,
+    depthTest: true,
+  }),
 }));
 
 const green = new THREE.Color("#0a8f4d");
@@ -126,6 +135,7 @@ const Stone1 = memo(function Stone1({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
+  mat,
 }) {
   const api = useRef();
 
@@ -136,18 +146,7 @@ const Stone1 = memo(function Stone1({
   const middle = nodes.FirstStoneBottom005;
   const bottom = nodes.FirstStoneMiddle003;
 
-  const baubleMaterial = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: new THREE.Color(Math.random(), Math.random(), Math.random()),
-        roughness: 0.01,
-        metalness: 0.2,
-        transparent: false,
-        depthWrite: true,
-        depthTest: true,
-      }),
-    []
-  );
+  const baubleMaterial = mat;
   const tmp = new THREE.Vector3();
   useFrame((state, delta) => {
     if (!api.current) return;
@@ -204,21 +203,14 @@ const Stone2 = memo(function Stone2({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
+  color,
+  mat,
 }) {
   const api = useRef();
 
   const { scene: stoneScene, nodes } = useGLTF(MODEL_URL2);
 
-  const baubleMaterial = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: new THREE.Color(Math.random(), Math.random(), Math.random()),
-        roughness: 0.01,
-        metalness: 0.2,
-        transparent: false,
-      }),
-    []
-  );
+  const baubleMaterial = mat;
 
   console.log("nodees", nodes);
 
