@@ -12,6 +12,8 @@ import {
   useLayoutEffect,
   useEffect,
 } from "react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
 const MODEL_URL = "/assets/models/mahjongborderinset.glb";
 const MODEL_URL2 = "/assets/models/mahjong2.glb";
@@ -411,10 +413,28 @@ const Pointer = memo(function Pointer({ vec = new THREE.Vector3() }) {
   const baseRadius = 2; // base collider/visual radius
   const radius = pressed ? baseRadius * 1.6 : baseRadius; // scale up on press
 
+  const isMobile = useMediaQuery(MediaQueries.mobile);
+
+  const hitSound = !isMobile ? new Audio("/assets/audio/impact.mp3") : null;
+  const lastHitRef = useRef(0);
+
   const onDown = useCallback(() => setPressed(true), []);
   const onUp = useCallback(() => setPressed(false), []);
   const onCancel = useCallback(() => setPressed(false), []);
   const onOut = useCallback(() => setPressed(false), []);
+
+  const collisionEnter = () => {
+    if (isMobile || !hitSound) return;
+    const now =
+      typeof performance !== "undefined" ? performance.now() : Date.now();
+    if (now - lastHitRef.current < 1000) return; // throttle: 1s window
+    lastHitRef.current = now;
+    try {
+      hitSound.currentTime = 0;
+      hitSound.volume = Math.random();
+      hitSound.play();
+    } catch (_) {}
+  };
 
   const ref = useRef();
   const target = useRef(new THREE.Vector3());
@@ -434,6 +454,7 @@ const Pointer = memo(function Pointer({ vec = new THREE.Vector3() }) {
       type="kinematicPosition"
       colliders={false}
       ref={ref}
+      onCollisionEnter={collisionEnter}
     >
       {/* Collider scales with press state */}
       <BallCollider args={[radius]} />
