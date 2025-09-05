@@ -17,9 +17,10 @@ import DraggableRigidBody from "./DraggableRigidBody";
 
 const MODEL_URL = "/assets/models/mahjongborderinset.glb";
 const MODEL_URL2 = "/assets/models/mahjong2.glb";
+const MODEL_URL3 = "/assets/models/mahjong1.glb";
 
 const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
-const baubles = [...Array(12)].map(() => ({
+const baubles = [...Array(14)].map(() => ({
   scale: [0.75, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)],
   color: new THREE.Color(Math.random(), Math.random(), Math.random()),
   mat: new THREE.MeshStandardMaterial({
@@ -33,7 +34,7 @@ const baubles = [...Array(12)].map(() => ({
 }));
 
 const green = new THREE.Color("#0a8f4d");
-const ivory = new THREE.Color("#fffff0");
+const ivory = new THREE.Color("#f4f4efff");
 
 // Opaque materials (avoid transparency sorting/blending issues)
 
@@ -56,8 +57,8 @@ const glassMat = new THREE.MeshPhysicalMaterial({
 
 const material = new THREE.MeshStandardMaterial({
   color: ivory,
-  roughness: 0.9,
-  metalness: 0.2,
+  roughness: 0.1,
+  metalness: 0.0,
 });
 // const materialGloss = new THREE.MeshStandardMaterial({
 //   color: green,
@@ -80,16 +81,11 @@ const PhysicsTest = () => {
 
       <Suspense fallback={null}>
         {baubles.map((props, i) => {
-          if (i % 2 === 0) {
-            return <Stone2 key={i} {...props} />;
-          } else {
-            return <Stone1 key={i} {...props} />;
-          }
+          const mod = i % 3;
+          if (mod === 0) return <Stone1 key={i} {...props} />;
+          if (mod === 1) return <Stone2 key={i} {...props} />;
+          return <Stone3 key={i} {...props} />;
         })}
-
-        {/* {baubles.map((props, i) => {
-          return <Stone2 key={i} {...props} />;
-        })} */}
       </Suspense>
     </>
   );
@@ -212,8 +208,6 @@ const Stone2 = memo(function Stone2({
 
   const baubleMaterial = mat;
 
-  console.log("nodees", nodes);
-
   const top = nodes.TopBase001;
   const middle = nodes.FirstStoneBottom004;
   const bottom = nodes.FirstStoneMiddle002;
@@ -283,6 +277,84 @@ const Stone2 = memo(function Stone2({
             />
           );
         })}
+      </group>
+    </RigidBody>
+  );
+});
+
+const Stone3 = memo(function Stone3({
+  vec = new THREE.Vector3(),
+  scale,
+  r = THREE.MathUtils.randFloatSpread,
+}) {
+  const api = useRef();
+
+  const { scene: stoneScene, nodes } = useGLTF(MODEL_URL3);
+
+  console.log("nodees", nodes);
+
+  const top = nodes.FirstStone;
+  const symbol = nodes.InnerMascot;
+  const middle = nodes.FirstStoneMiddle;
+  const bottom = nodes.FirstStoneBottom001;
+
+  const baubleMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+        roughness: 0.01,
+        metalness: 0.2,
+        transparent: false,
+        depthWrite: true,
+        depthTest: true,
+      }),
+    []
+  );
+  const tmp = new THREE.Vector3();
+  useFrame((state, delta) => {
+    if (!api.current) return;
+    delta = Math.min(0.1, delta);
+    api.current.applyImpulse(
+      tmp
+        .copy(api.current.translation())
+        .normalize()
+        .multiplyScalar(-delta * scale) // scale once
+        .multiply(new THREE.Vector3(50, 150, 50)) // or set(x,y,z)
+    );
+  });
+  return (
+    <RigidBody
+      linearDamping={0.75}
+      angularDamping={0.15}
+      friction={0.2}
+      position={[r(20), r(20) - 25, r(20) - 10]}
+      ref={api}
+      colliders={false}
+      dispose={null}
+    >
+      <CuboidCollider position={[0, 0, 0]} args={[1, 0.6, 1]} />
+
+      {/* <mesh
+        castShadow
+        receiveShadow
+        scale={scale}
+        geometry={sphereGeometry}
+        material={baubleMaterial}
+      /> */}
+      <group>
+        <mesh scale={1} geometry={middle.geometry} material={material} />
+        <mesh scale={1} geometry={bottom.geometry} material={glassMat} />
+        <mesh scale={1} geometry={top.geometry} material={glassMat} />
+        <mesh
+          scale={1}
+          position={[
+            symbol.position.x,
+            symbol.position.y + 0.05,
+            symbol.position.z,
+          ]}
+          geometry={symbol.geometry}
+          material={baubleMaterial}
+        />
       </group>
     </RigidBody>
   );

@@ -55,7 +55,7 @@ const Layout = ({ children }) => {
         className={roboto.className}
         style={{
           position: "relative",
-          overflow: "auto",
+          overflow: "hidden",
           touchAction: "auto",
         }}
       >
