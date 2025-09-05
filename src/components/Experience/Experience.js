@@ -45,6 +45,7 @@ const Experience = () => {
         intensity={1}
         // castShadow
       />
+      {/* <pointLight distance={40} intensity={8} color="lightblue" /> */}
       {isMobile && (
         <OrbitControls enableDamping enablePan={false} enableZoom={false} />
       )}
@@ -100,13 +101,13 @@ const Experience = () => {
       </Environment>
 
       <EffectComposer disableNormalPass multisampling={8}>
-        {/* <Bloom
-          intensity={0.3}
-          luminanceThreshold={0}
+        <Bloom
+          intensity={0.4}
+          luminanceThreshold={0.2}
           luminanceSmoothing={0.9}
           height={300}
-        /> */}
-        {/* <Noise opacity={0.2} /> */}
+        />
+        <Noise opacity={0.06} />
         <N8AO distanceFalloff={1} aoRadius={1} intensity={4} />
       </EffectComposer>
     </>

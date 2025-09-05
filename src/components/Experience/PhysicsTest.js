@@ -17,12 +17,28 @@ const MODEL_URL = "/assets/models/mahjongborderinset.glb";
 const MODEL_URL2 = "/assets/models/mahjong2.glb";
 const MODEL_URL3 = "/assets/models/mahjong1.glb";
 
+// helper (put this above where you build `baubles`)
+const randomWarmVivid = () => {
+  // Hue ranges (normalized 0–1): [red], [purple/magenta], [orange]
+  const ranges = [
+    [0.0, 0.08], // red
+    [0.78, 0.89], // purple/magenta
+    [0.92, 1.0], // red wrap-around
+    [0.08, 0.14], // orange
+  ];
+  const [h0, h1] = ranges[Math.floor(Math.random() * ranges.length)];
+  const h = THREE.MathUtils.lerp(h0, h1, Math.random());
+  const s = THREE.MathUtils.lerp(0.75, 1.0, Math.random()); // keep saturation high → avoids brown
+  const l = THREE.MathUtils.lerp(0.45, 0.6, Math.random()); // mid lightness → avoids muddy browns
+  return new THREE.Color().setHSL(h, s, l);
+};
+
 const sphereGeometry = new THREE.SphereGeometry(1, 28, 28);
 const baubles = [...Array(14)].map(() => ({
   scale: [0.75, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)],
   color: new THREE.Color(Math.random(), Math.random(), Math.random()),
   mat: new THREE.MeshStandardMaterial({
-    color: new THREE.Color(Math.random(), Math.random(), Math.random()),
+    color: randomWarmVivid(),
     roughness: 0.01,
     metalness: 0.2,
     transparent: false,
