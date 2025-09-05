@@ -417,6 +417,8 @@ const Pointer = memo(function Pointer({ vec = new THREE.Vector3() }) {
 
   const hitSound = !isMobile ? new Audio("/assets/audio/impact.mp3") : null;
   const lastHitRef = useRef(0);
+  const lastMoveRef = useRef(0);
+  const prevTargetRef = useRef(new THREE.Vector3());
 
   const onDown = useCallback(() => setPressed(true), []);
   const onUp = useCallback(() => setPressed(false), []);
@@ -427,7 +429,10 @@ const Pointer = memo(function Pointer({ vec = new THREE.Vector3() }) {
     if (isMobile || !hitSound) return;
     const now =
       typeof performance !== "undefined" ? performance.now() : Date.now();
-    if (now - lastHitRef.current < 1000) return; // throttle: 1s window
+    // Do not play if there hasn't been pointer movement in the last second
+    if (now - lastMoveRef.current > 1000) return;
+    // Throttle: only once per second regardless of movement
+    if (now - lastHitRef.current < 1000) return;
     lastHitRef.current = now;
     try {
       hitSound.currentTime = 0;
@@ -445,6 +450,13 @@ const Pointer = memo(function Pointer({ vec = new THREE.Vector3() }) {
       (mouse.y * viewport.height) / 2,
       0
     );
+    // Detect meaningful pointer movement and timestamp it
+    const moved = target.current.distanceTo(prevTargetRef.current) > 0.005; // tweak epsilon if needed
+    if (moved) {
+      lastMoveRef.current =
+        typeof performance !== "undefined" ? performance.now() : Date.now();
+      prevTargetRef.current.copy(target.current);
+    }
     vec.lerp(target.current, 0.2);
     ref.current.setNextKinematicTranslation(vec);
   });
