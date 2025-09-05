@@ -13,8 +13,6 @@ import {
   useEffect,
 } from "react";
 
-import DraggableRigidBody from "./DraggableRigidBody";
-
 const MODEL_URL = "/assets/models/mahjongborderinset.glb";
 const MODEL_URL2 = "/assets/models/mahjong2.glb";
 const MODEL_URL3 = "/assets/models/mahjong1.glb";
@@ -75,16 +73,18 @@ const material = new THREE.MeshStandardMaterial({
 // });
 
 const PhysicsTest = () => {
+  const colors = baubles.map((b) => b.color);
   return (
     <>
       <Pointer />
 
       <Suspense fallback={null}>
         {baubles.map((props, i) => {
+          const props2 = { ...props, colors: colors };
           const mod = i % 3;
-          if (mod === 0) return <Stone1 key={i} {...props} />;
-          if (mod === 1) return <Stone2 key={i} {...props} />;
-          return <Stone3 key={i} {...props} />;
+          if (mod === 0) return <Stone1 key={i} {...props2} />;
+          if (mod === 1) return <Stone2 key={i} {...props2} />;
+          return <Stone3 key={i} {...props2} />;
         })}
       </Suspense>
     </>
@@ -132,6 +132,7 @@ const Stone1 = memo(function Stone1({
   scale,
   r = THREE.MathUtils.randFloatSpread,
   mat,
+  colors,
 }) {
   const api = useRef();
 
@@ -143,6 +144,19 @@ const Stone1 = memo(function Stone1({
   const bottom = nodes.FirstStoneMiddle003;
 
   const baubleMaterial = mat;
+
+  useEffect(() => {
+    function handleDown() {
+      console.log("cols", colors);
+      if (baubleMaterial && colors?.length) {
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        baubleMaterial.color.copy(colors[randomIndex]);
+      }
+    }
+    window.addEventListener("pointerdown", handleDown);
+    return () => window.removeEventListener("pointerdown", handleDown);
+  }, [baubleMaterial, colors]);
+
   const tmp = new THREE.Vector3();
   useFrame((state, delta) => {
     if (!api.current) return;
@@ -199,7 +213,7 @@ const Stone2 = memo(function Stone2({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
-  color,
+  colors,
   mat,
 }) {
   const api = useRef();
@@ -218,6 +232,18 @@ const Stone2 = memo(function Stone2({
     nodes["symbol-3002"],
     nodes["SYMBOL-4002"],
   ];
+
+  useEffect(() => {
+    function handleDown() {
+      console.log("cols", colors);
+      if (baubleMaterial && colors?.length) {
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        baubleMaterial.color.copy(colors[randomIndex]);
+      }
+    }
+    window.addEventListener("pointerdown", handleDown);
+    return () => window.removeEventListener("pointerdown", handleDown);
+  }, [baubleMaterial, colors]);
 
   const tmp = new THREE.Vector3();
   useFrame((state, delta) => {
@@ -286,6 +312,8 @@ const Stone3 = memo(function Stone3({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
+  mat,
+  colors,
 }) {
   const api = useRef();
 
@@ -298,18 +326,20 @@ const Stone3 = memo(function Stone3({
   const middle = nodes.FirstStoneMiddle;
   const bottom = nodes.FirstStoneBottom001;
 
-  const baubleMaterial = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: new THREE.Color(Math.random(), Math.random(), Math.random()),
-        roughness: 0.01,
-        metalness: 0.2,
-        transparent: false,
-        depthWrite: true,
-        depthTest: true,
-      }),
-    []
-  );
+  const baubleMaterial = mat;
+
+  useEffect(() => {
+    function handleDown() {
+      console.log("cols", colors);
+      if (baubleMaterial && colors?.length) {
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        baubleMaterial.color.copy(colors[randomIndex]);
+      }
+    }
+    window.addEventListener("pointerdown", handleDown);
+    return () => window.removeEventListener("pointerdown", handleDown);
+  }, [baubleMaterial, colors]);
+
   const tmp = new THREE.Vector3();
   useFrame((state, delta) => {
     if (!api.current) return;
