@@ -1,4 +1,4 @@
-import { Suspense, useRef } from "react";
+import { Suspense, useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, OrbitControls } from "@react-three/drei";
 import {
@@ -19,8 +19,9 @@ import BGPlane from "./BGPlane";
 
 const Experience = () => {
   const isReady = useRef(false);
+  const audioRef = useRef(null);
 
-  const { viewport, gl } = useThree();
+  const { viewport, gl, camera } = useThree();
 
   const isMobile = useMediaQuery(MediaQueries.mobile);
 
@@ -33,6 +34,66 @@ const Experience = () => {
       canvasEl.classList.add("isReady");
     }
   }, 0);
+
+  // Attempt to resume WebAudio on first user interaction (some browsers block autoplay)
+  useEffect(() => {
+    const resume = () => {
+      const audio = audioRef.current;
+      const ctx = audio && audio.context ? audio.context : null;
+      if (ctx && ctx.state === "suspended") ctx.resume();
+      // If the buffer is loaded but not playing, start it after user gesture
+      if (audio && audio.buffer && !audio.isPlaying) {
+        try {
+          audio.play();
+        } catch (_) {}
+      }
+    };
+    window.addEventListener("pointerdown", resume, { once: true });
+    window.addEventListener("touchstart", resume, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", resume);
+      window.removeEventListener("touchstart", resume);
+    };
+  }, []);
+
+  // Create and play a non-positional ambient audio loop using Three.js
+  useEffect(() => {
+    if (!camera) return;
+    let audio, listener;
+    const loader = new THREE.AudioLoader();
+
+    listener = new THREE.AudioListener();
+    camera.add(listener);
+
+    audio = new THREE.Audio(listener);
+    audioRef.current = audio;
+
+    loader.load(
+      "/assets/audio/ambientloop.mp3",
+      (buffer) => {
+        audio.setBuffer(buffer);
+        audio.setLoop(true);
+        audio.setVolume(0.6);
+        // Try to start; if context is suspended, our resume handler will start it later
+        if (listener.context.state !== "suspended") {
+          try {
+            audio.play();
+          } catch (_) {}
+        }
+      },
+      undefined,
+      (err) => {
+        console.warn("Failed to load ambient loop:", err);
+      }
+    );
+
+    return () => {
+      try {
+        audio && audio.stop();
+      } catch (_) {}
+      if (listener) camera.remove(listener);
+    };
+  }, [gl]);
 
   return (
     <>
