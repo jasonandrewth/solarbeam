@@ -46,6 +46,7 @@ const baubles = [...Array(14)].map(() => ({
     depthTest: true,
   }),
 }));
+const colors = baubles.map((b) => b.color);
 
 const green = new THREE.Color("#0a8f4d");
 const ivory = new THREE.Color("#f4f4efff");
@@ -89,7 +90,6 @@ const material = new THREE.MeshStandardMaterial({
 // });
 
 const PhysicsTest = () => {
-  const colors = baubles.map((b) => b.color);
   return (
     <>
       <Pointer />
