@@ -14,31 +14,51 @@ const mockData = [
 ];
 const ArchivePage = () => {
   return (
-    <div css={styles.grid}>
-      {mockData.map((article, idx) => {
-        return (
-          <article key={idx} css={styles.card}>
-            <div css={styles.aspectRatio}></div>
-            <div css={styles.content}>
-              <h2>{article.title}</h2>
-              <span css={styles.year}>{article.year}</span>
-            </div>
-          </article>
-        );
-      })}
-    </div>
+    <>
+      <div css={styles.grid}>
+        {mockData.map((article, idx) => {
+          return (
+            <article key={idx} css={styles.card}>
+              <div css={styles.aspectRatio}></div>
+              <div css={styles.content}>
+                <h2>{article.title}</h2>
+                <span css={styles.year}>{article.year}</span>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </>
   );
 };
 
 export default ArchivePage;
 
 const styles = {
+  body: css`
+    width: 50%;
+    opacity: 1;
+    /* transform: translateX(var(--gap-l)); */
+    /* padding-top: var(--gap-s); */
+
+    /* user-select: none; */
+    position: relative;
+    z-index: 1;
+    color: rgba(255, 255, 255, 0.6);
+    @media ${MediaQueries.mobile} {
+      transform: none;
+      padding-top: 0;
+      width: 100%;
+    }
+  `,
   grid: css`
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
     width: 100%;
     padding-top: var(--gap-xl);
+    position: relative;
+    z-index: 1;
 
     @media ${MediaQueries.mobile} {
       grid-template-columns: 1fr;

@@ -2,14 +2,14 @@
 import { Global } from "@emotion/react";
 import { Global as GlobalStyles } from "@/styles/Global";
 import { css } from "@emotion/react";
-
+import { MediaQueries } from "@/styles/mixins/MediaQueries";
 // import localFont from "next/font/local";
 import { Roboto } from "next/font/google";
 import PageTransitions from "./PageTransitions";
 
 import { useRef } from "react";
 import dynamic from "next/dynamic";
-
+import { ReactLenis, useLenis } from "lenis/react";
 import { Meta } from "@/components/Global/Head/Meta";
 import { Favicons } from "@/components/Global/Head/Favicons";
 
@@ -18,6 +18,7 @@ import Footer from "./Footer/Footer";
 
 import Scene from "@/components/Experience/Scene";
 import { usePathname } from "next/navigation";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 // const Scene = dynamic(() => import("@/components/Experience/Scene"), {
 //   ssr: false,
@@ -44,30 +45,48 @@ const Layout = ({ children }) => {
 
   const pathname = usePathname();
 
+  const isMobile = useMediaQuery(MediaQueries.mobile);
+
+  const lenis = useLenis(({ scroll }) => {});
+
   return (
     <>
       <Meta />
       <Favicons />
       <Global styles={GlobalStyles} />
       {/* <MatomoAnalytics /> */}
-      <main
-        ref={ref}
-        className={roboto.className}
-        style={{
-          position: "relative",
-          overflow: "hidden",
-          touchAction: "auto",
+      <ReactLenis
+        root
+        options={{
+          syncTouch: true, // let touch input stay native on mobile
+          duration: isMobile ? 0 : 1.2, // adjust smoothing duration
+          smoothTouch: false, // explicitly disable smooth-touch inertia
         }}
       >
-        <Header />
-        <div
-          css={styles.backdrop}
-          data-visible={pathname === "/about" || pathname === "/archive"}
-        />
-        <PageTransitions>{children}</PageTransitions>
-        <Scene eventSource={ref} eventPrefix="client" />
-        <Footer />
-      </main>
+        <main
+          ref={ref}
+          className={roboto.className}
+          style={{
+            position: "relative",
+            minHeight: "100vh",
+
+            touchAction: "auto",
+          }}
+        >
+          <Header />
+          {/* <div
+            css={styles.backdrop}
+            data-visible={
+              pathname === "/about" ||
+              pathname === "/archive" ||
+              pathname === "/gallery"
+            }
+          /> */}
+          <PageTransitions>{children}</PageTransitions>
+          {/* <Scene eventSource={ref} eventPrefix="client" /> */}
+          <Footer />
+        </main>
+      </ReactLenis>
     </>
   );
 };

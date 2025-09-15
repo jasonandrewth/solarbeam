@@ -23,7 +23,7 @@ const Document = css`
       font-family: miller-banner-ex-condensed, sans-serif;
       font-weight: 300;
       font-style: normal; */
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
   }
 
   html {

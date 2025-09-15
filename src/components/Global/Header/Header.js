@@ -9,8 +9,8 @@ import { usePathname } from "next/navigation";
 const Header = () => {
   const pathname = usePathname();
   return (
-    <header data-about={pathname === "/about"} css={styles.header}>
-      <Link href={"/"} data-about={pathname === "/about"} css={styles.logo}>
+    <header data-about={pathname !== "/"} css={styles.header}>
+      <Link href={"/"} data-about={pathname !== "/"} css={styles.logo}>
         {/* <div style={{ fontWeight: "900" }}>solarbeam kingdom</div> */}
         <Logo />
       </Link>
