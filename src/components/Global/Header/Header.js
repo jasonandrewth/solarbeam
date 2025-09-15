@@ -8,16 +8,17 @@ import { usePathname } from "next/navigation";
 
 const Header = () => {
   const pathname = usePathname();
+  const isDark = pathname !== "/" || pathname !== "/gallery";
   return (
-    <header data-about={pathname !== "/"} css={styles.header}>
-      <Link href={"/"} data-about={pathname !== "/"} css={styles.logo}>
+    <header data-about={isDark} css={styles.header}>
+      <Link href={"/"} data-about={isDark} css={styles.logo}>
         {/* <div style={{ fontWeight: "900" }}>solarbeam kingdom</div> */}
         <Logo />
       </Link>
 
       <Link
         href={pathname === "/about" ? "/" : "/about"}
-        data-about={pathname === "/about"}
+        data-about={isDark}
         css={styles.menuIcon}
       >
         +

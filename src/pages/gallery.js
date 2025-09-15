@@ -37,9 +37,6 @@ const mockData = [
   {
     urls: ["/assets/imgs/19.jpg", "/assets/imgs/20.jpg"],
   },
-  {
-    urls: ["/assets/imgs/21.jpg", "/assets/imgs/22.jpg"],
-  },
 ];
 const ArchivePage = () => {
   const [active, setActive] = useState(0);
@@ -187,35 +184,37 @@ const ArchivePage = () => {
       </div>
 
       <motion.div css={styles.slider} ref={containerRef} style={{ x }}>
-        {[...mockData, ...mockData, ...mockData].map((article, idx) => {
-          const baseIndex = idx % mockData.length;
-          return (
-            <article
-              key={idx}
-              css={styles.card}
-              ref={(el) => {
-                if (idx < mockData.length) itemRefs.current[baseIndex] = el; // measure only first cycle
-              }}
-            >
-              <div css={styles.aspectRatio}>
-                <Image
-                  src={article.urls[0]}
-                  alt={"thumbnail"}
-                  fill
-                  /* These thumbs render ~160px wide at ~200px tall (4:5). Give the browser the real width. */
-                  sizes="(min-width: 1024px) 160px, (min-width: 640px) 140px, 120px"
-                  /* Only keep a couple eagerly-loaded above-the-fold items; the rest lazy */
-                  priority
-                  // loading={"eager"}
-                  // fetchPriority={idx < 8 ? "high" : "low"}
-                  /* Lower quality is fine for tiny thumbs; Next will serve AVIF/WebP when possible */
-                  // quality={50}
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-            </article>
-          );
-        })}
+        {[...mockData, ...mockData, ...mockData, ...mockData, ...mockData].map(
+          (article, idx) => {
+            const baseIndex = idx % mockData.length;
+            return (
+              <article
+                key={idx}
+                css={styles.card}
+                ref={(el) => {
+                  if (idx < mockData.length) itemRefs.current[baseIndex] = el; // measure only first cycle
+                }}
+              >
+                <div css={styles.aspectRatio}>
+                  <Image
+                    src={article.urls[0]}
+                    alt={"thumbnail"}
+                    fill
+                    /* These thumbs render ~160px wide at ~200px tall (4:5). Give the browser the real width. */
+                    sizes="(min-width: 1024px) 160px, (min-width: 640px) 140px, 120px"
+                    /* Only keep a couple eagerly-loaded above-the-fold items; the rest lazy */
+                    priority
+                    // loading={"eager"}
+                    // fetchPriority={idx < 8 ? "high" : "low"}
+                    /* Lower quality is fine for tiny thumbs; Next will serve AVIF/WebP when possible */
+                    // quality={50}
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              </article>
+            );
+          }
+        )}
       </motion.div>
     </>
   );
@@ -257,7 +256,7 @@ const styles = {
     left: 50%;
     transform: translateX(-50%);
     width: calc(100%);
-    height: calc(100vh - 12vh);
+    height: calc(100vh - 10vh - 1rem);
     display: block; /* stacking handled by inner layer */
   `,
   pairsLayer: css`
@@ -271,7 +270,7 @@ const styles = {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.25rem;
     /* transition: opacity 300ms ease; */
     will-change: opacity;
@@ -318,7 +317,7 @@ const styles = {
     height: 100%;
     width: auto;
     aspect-ratio: 10 / 16;
-    flex: 1 1 0;
+    /* flex: 1 1 0; */
   `,
   content: css`
     position: absolute;
