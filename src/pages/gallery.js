@@ -11,13 +11,13 @@ const mockData = [
     urls: ["/assets/imgs/1.jpg", "/assets/imgs/2.jpg"],
   },
   {
-    urls: ["/assets/imgs/3.jpg", "/assets/imgs/3.jpg"],
+    urls: ["/assets/imgs/3.jpg", "/assets/imgs/4.jpg"],
   },
   {
-    urls: ["/assets/imgs/5.jpg", "/assets/imgs/5.jpg"],
+    urls: ["/assets/imgs/5.jpg", "/assets/imgs/6.jpg"],
   },
   {
-    urls: ["/assets/imgs/7.jpg", "/assets/imgs/7.jpg"],
+    urls: ["/assets/imgs/7.jpg", "/assets/imgs/8.jpg"],
   },
   {
     urls: ["/assets/imgs/9.jpg", "/assets/imgs/10.jpg"],
@@ -29,10 +29,10 @@ const mockData = [
     urls: ["/assets/imgs/13.jpg", "/assets/imgs/14.jpg"],
   },
   {
-    urls: ["/assets/imgs/15.jpg", "/assets/imgs/15.jpg"],
+    urls: ["/assets/imgs/15.jpg", "/assets/imgs/16.jpg"],
   },
   {
-    urls: ["/assets/imgs/17.jpg", "/assets/imgs/17.jpg"],
+    urls: ["/assets/imgs/17.jpg", "/assets/imgs/18.jpg"],
   },
   {
     urls: ["/assets/imgs/19.jpg", "/assets/imgs/20.jpg"],
@@ -209,7 +209,7 @@ const ArchivePage = () => {
                   // loading={"eager"}
                   // fetchPriority={idx < 8 ? "high" : "low"}
                   /* Lower quality is fine for tiny thumbs; Next will serve AVIF/WebP when possible */
-                  quality={50}
+                  // quality={50}
                   style={{ objectFit: "cover" }}
                 />
               </div>
