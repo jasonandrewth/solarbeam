@@ -49,6 +49,8 @@ const Layout = ({ children }) => {
 
   const lenis = useLenis(({ scroll }) => {});
 
+  const isInfnite = pathname === "/gallery";
+
   return (
     <>
       <Meta />
@@ -58,30 +60,18 @@ const Layout = ({ children }) => {
       <ReactLenis
         root
         options={{
-          syncTouch: true, // let touch input stay native on mobile
-          duration: isMobile ? 0 : 1.2, // adjust smoothing duration
+          syncTouch: isInfnite, // let touch input stay native on mobile
+          duration: isMobile ? 0.1 : 1.2, // adjust smoothing duration
           smoothTouch: false, // explicitly disable smooth-touch inertia
+          infinite: isInfnite,
         }}
       >
-        <main
-          ref={ref}
-          className={roboto.className}
-          style={{
-            position: "relative",
-            minHeight: "100vh",
-
-            touchAction: "auto",
-          }}
-        >
+        <main ref={ref} className={roboto.className} css={styles.main}>
           <Header />
-          {/* <div
+          <div
             css={styles.backdrop}
-            data-visible={
-              pathname === "/about" ||
-              pathname === "/archive" ||
-              pathname === "/gallery"
-            }
-          /> */}
+            data-visible={pathname === "/about" || pathname === "/archive"}
+          />
           <PageTransitions>{children}</PageTransitions>
           {/* <Scene eventSource={ref} eventPrefix="client" /> */}
           <Footer />
@@ -108,6 +98,12 @@ const styles = {
     &[data-visible="true"] {
       opacity: 1;
     }
+  `,
+
+  main: css`
+    position: relative;
+    min-height: 100vh;
+    touch-action: auto;
   `,
 };
 
