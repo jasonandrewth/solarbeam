@@ -65,10 +65,15 @@ const ArchivePage = () => {
       autoActiveRef.current = false;
     };
     const opts = { passive: true };
+
     window.addEventListener("wheel", markUser, opts);
+    window.addEventListener("touchstart", markUser, opts);
+    window.addEventListener("touchmove", markUser, opts);
 
     return () => {
       window.removeEventListener("wheel", markUser);
+      window.removeEventListener("touchstart", markUser);
+      window.removeEventListener("touchmove", markUser);
     };
   }, []);
 
