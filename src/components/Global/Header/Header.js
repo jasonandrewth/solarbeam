@@ -16,40 +16,28 @@ const Header = () => {
         <Logo />
       </Link>
 
-      <Link
+      {/* <Link
         href={pathname === "/about" ? "/" : "/about"}
         data-about={isDark}
         css={styles.menuIcon}
       >
         +
-      </Link>
-      {/* <nav aria-label="Main" css={styles.nav}>
-        <div css={styles.menu}>
-          <div css={styles.leftMenu}>
-            <li css={styles.hasSubnav}>
-              <Link href={"/archive"}>Archive</Link>
-              <ul css={styles.subnav}>
-                <li>
-                  <Link href="/archive/new">New Arrivals</Link>
-                </li>
-                <li>
-                  <Link href="/archive">All</Link>
-                </li>
-              </ul>
-            </li>
-          </div>
+      </Link> */}
 
-          <Link href={"/"} data-about={pathname === "/about"} css={styles.logo}>
-         
-            <Logo />
+      <nav css={styles.nav}>
+        <ul>
+          <Link href={"archive"} data-about={isDark}>
+            <li>archive</li>
           </Link>
-          <div css={styles.rightMenu}>
-            <li>
-              <Link href={"/about"}>+</Link>
-            </li>
-          </div>
-        </div>
-      </nav> */}
+
+          <Link href={"gallery"} data-about={isDark}>
+            <li>gallery</li>
+          </Link>
+          <Link href={"about"} data-about={isDark}>
+            <li>about</li>
+          </Link>
+        </ul>
+      </nav>
     </header>
   );
 };
@@ -72,13 +60,13 @@ const styles = {
 
     /* border: 1px solid green; */
 
-    * {
+    /* * {
       text-transform: uppercase;
       font-size: 64px;
       line-height: 1rem;
       color: var(--color--black);
       transition: color 0.25s linear;
-    }
+    } */
 
     &[data-about="true"] {
       * {
@@ -98,6 +86,13 @@ const styles = {
   `,
   nav: css`
     position: relative;
+    font-size: var(--type--scale---0);
+    line-height: var(--type--lineheight--1);
+
+    ul {
+      display: flex;
+      gap: var(--gap-m);
+    }
   `,
   menuIcon: css`
     transform: rotate(0);

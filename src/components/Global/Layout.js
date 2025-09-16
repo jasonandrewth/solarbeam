@@ -7,9 +7,10 @@ import { MediaQueries } from "@/styles/mixins/MediaQueries";
 import { Roboto } from "next/font/google";
 import PageTransitions from "./PageTransitions";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { ReactLenis, useLenis } from "lenis/react";
+import { cancelFrame, frame } from "motion/react";
 import { Meta } from "@/components/Global/Head/Meta";
 import { Favicons } from "@/components/Global/Head/Favicons";
 
@@ -42,14 +43,24 @@ const roboto = Roboto({
 
 const Layout = ({ children }) => {
   const ref = useRef(null);
+  const lenisRef = useRef(null);
 
   const pathname = usePathname();
 
   const isMobile = useMediaQuery(MediaQueries.mobile);
 
-  const lenis = useLenis(({ scroll }) => {});
-
   const isInfnite = pathname === "/gallery";
+
+  useEffect(() => {
+    function update(data) {
+      const time = data.timestamp;
+      lenisRef.current?.lenis?.raf(time);
+    }
+
+    frame.update(update, true);
+
+    return () => cancelFrame(update);
+  }, []);
 
   return (
     <>
@@ -58,12 +69,14 @@ const Layout = ({ children }) => {
       <Global styles={GlobalStyles} />
       {/* <MatomoAnalytics /> */}
       <ReactLenis
+        ref={lenisRef}
         root
         options={{
           syncTouch: isInfnite, // let touch input stay native on mobile
           duration: isMobile ? 0.1 : 1.2, // adjust smoothing duration
           smoothTouch: false, // explicitly disable smooth-touch inertia
           infinite: isInfnite,
+          autoRaf: false,
         }}
       >
         <main ref={ref} className={roboto.className} css={styles.main}>

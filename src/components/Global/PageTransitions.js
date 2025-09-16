@@ -118,6 +118,8 @@ const styles = {
     z-index: 1;
     padding: var(--gap-l);
     font-size: var(--type--scale---0);
+    min-height: 100vh;
+    padding-top: 12rem;
   `,
 };
 

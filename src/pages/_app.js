@@ -1,4 +1,6 @@
 //Components
+import "lenis/dist/lenis.css";
+
 import Layout from "@/components/Global/Layout";
 
 export default function App({ Component, pageProps }) {
