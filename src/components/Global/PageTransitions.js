@@ -120,6 +120,10 @@ const styles = {
     font-size: var(--type--scale---0);
     min-height: 100vh;
     padding-top: 12rem;
+
+    @media ${MediaQueries.medium} {
+      padding-top: calc(var(--gap-xl) + var(--gap-m));
+    }
   `,
 };
 

@@ -5,6 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useLenis } from "lenis/react";
 import { motion, useMotionValue, useAnimationFrame } from "motion/react";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const mockData = [
   {
@@ -40,8 +41,15 @@ const mockData = [
 ];
 const ArchivePage = () => {
   const [active, setActive] = useState(0);
+  const mockDataMobile = mockData.flatMap((item) =>
+    item.urls.map((url) => ({ url }))
+  );
 
   const lenis = useLenis(({ scroll }) => {});
+
+  const isMobile = useMediaQuery(MediaQueries.mobile);
+  const baseArray = isMobile ? mockDataMobile : mockData;
+  const baseLength = baseArray.length;
 
   const containerRef = useRef(null);
   const itemRefs = useRef([]);
@@ -51,7 +59,7 @@ const ArchivePage = () => {
   const sliderWidthRef = useRef(0);
   const x = useMotionValue(0);
   const [sliderWidth, setSliderWidth] = useState(0);
-  const SPEED = 40; // px per second - adjust to taste
+  const SPEED = isMobile ? 30 : 40; // px per second - adjust to taste
   const speedRef = useRef(SPEED);
 
   const prevScrollRef = useRef(0);
@@ -82,7 +90,7 @@ const ArchivePage = () => {
     if (!containerRef.current) return;
 
     const measure = () => {
-      const items = itemRefs.current.slice(0, mockData.length);
+      const items = itemRefs.current.slice(0, baseLength);
       const widths = items.map((el) => el?.offsetWidth || 0);
       const total = widths.reduce((acc, w) => acc + w, 0);
       if (total > 0) {
@@ -106,16 +114,14 @@ const ArchivePage = () => {
     measure();
 
     const ro = new ResizeObserver(() => measure());
-    itemRefs.current
-      .slice(0, mockData.length)
-      .forEach((el) => el && ro.observe(el));
+    itemRefs.current.slice(0, baseLength).forEach((el) => el && ro.observe(el));
     window.addEventListener("resize", measure);
 
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };
-  }, []);
+  }, [baseLength]);
 
   useAnimationFrame((t, delta) => {
     const trackW = trackWidthRef.current;
@@ -153,73 +159,80 @@ const ArchivePage = () => {
     prevScrollRef.current = curr;
   });
 
+  const extendedArray = isMobile
+    ? [...baseArray, ...baseArray, ...baseArray, ...baseArray]
+    : [...baseArray, ...baseArray, ...baseArray, ...baseArray, ...baseArray];
+
   return (
     <>
       <div css={styles.main} style={{ "--slider-width": `${sliderWidth}px` }}>
         <div css={styles.galleryResult}>
           <div css={styles.pairsLayer}>
-            {mockData.map((item, i) => (
-              <div
-                key={i}
-                css={styles.pair}
-                style={{ opacity: active === i ? 1 : 0 }}
-              >
-                <div css={styles.aspectRatio2}>
-                  <Image
-                    src={item.urls[0]}
-                    alt={"alt"}
-                    fill
-                    priority={active === i}
-                    style={{ objectFit: "cover" }}
-                  />
+            {(isMobile ? mockDataMobile : mockData).map((item, i) => {
+              const isActive = active === i;
+              return (
+                <div
+                  key={i}
+                  css={styles.pair}
+                  style={{ opacity: isActive ? 1 : 0 }}
+                >
+                  <div css={styles.aspectRatio2}>
+                    <Image
+                      src={isMobile ? item.url : item.urls[0]}
+                      alt={"alt"}
+                      fill
+                      priority={isActive}
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
+                  {!isMobile && (
+                    <div css={styles.aspectRatio2}>
+                      <Image
+                        src={item.urls[1]}
+                        alt={"alt"}
+                        fill
+                        priority={isActive}
+                        style={{ objectFit: "cover" }}
+                      />
+                    </div>
+                  )}
                 </div>
-                <div css={styles.aspectRatio2}>
-                  <Image
-                    src={item.urls[1]}
-                    alt={"alt"}
-                    fill
-                    priority={active === i}
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
 
       <motion.div css={styles.slider} ref={containerRef} style={{ x }}>
-        {[...mockData, ...mockData, ...mockData, ...mockData, ...mockData].map(
-          (article, idx) => {
-            const baseIndex = idx % mockData.length;
-            return (
-              <article
-                key={idx}
-                css={styles.card}
-                ref={(el) => {
-                  if (idx < mockData.length) itemRefs.current[baseIndex] = el; // measure only first cycle
-                }}
-              >
-                <div css={styles.aspectRatio}>
-                  <Image
-                    src={article.urls[0]}
-                    alt={"thumbnail"}
-                    fill
-                    /* These thumbs render ~160px wide at ~200px tall (4:5). Give the browser the real width. */
-                    sizes="(min-width: 1024px) 160px, (min-width: 640px) 140px, 120px"
-                    /* Only keep a couple eagerly-loaded above-the-fold items; the rest lazy */
-                    priority
-                    // loading={"eager"}
-                    // fetchPriority={idx < 8 ? "high" : "low"}
-                    /* Lower quality is fine for tiny thumbs; Next will serve AVIF/WebP when possible */
-                    // quality={50}
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-              </article>
-            );
-          }
-        )}
+        {extendedArray.map((article, idx) => {
+          const baseIndex = idx % baseLength;
+          return (
+            <article
+              key={idx}
+              css={styles.card}
+              ref={(el) => {
+                if (idx < baseLength) itemRefs.current[baseIndex] = el; // measure only first cycle
+              }}
+            >
+              <div css={styles.aspectRatio}>
+                <Image
+                  src={isMobile ? article.url : article.urls[0]}
+                  alt={"thumbnail"}
+                  fill
+                  /* These thumbs render ~160px wide at ~200px tall (4:5). Give the browser the real width. */
+                  sizes="(min-width: 1024px) 160px, (min-width: 640px) 140px, 120px"
+                  /* Only keep a couple eagerly-loaded above-the-fold items; the rest lazy */
+                  priority
+                  // loading={"eager"}
+                  // fetchPriority={idx < 8 ? "high" : "low"}
+                  /* Lower quality is fine for tiny thumbs; Next will serve AVIF/WebP when possible */
+                  // quality={50}
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+            </article>
+          );
+        })}
       </motion.div>
     </>
   );
@@ -263,6 +276,11 @@ const styles = {
     width: calc(100%);
     height: calc(100vh - 10vh - 1rem);
     display: block; /* stacking handled by inner layer */
+    @media ${MediaQueries.mobile} {
+      margin-top: calc(var(--gap-xl) + var(--gap-m));
+
+      height: calc(100vh - 12vh - 4.3rem - (var(--gap-xl) + var(--gap-m)));
+    }
   `,
   pairsLayer: css`
     position: relative;

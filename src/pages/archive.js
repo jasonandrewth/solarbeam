@@ -74,7 +74,7 @@ const styles = {
 
     @media ${MediaQueries.mobile} {
       grid-template-columns: 1fr;
-      padding-top: 6rem;
+      /* padding-top: 6rem; */
     }
   `,
   card: css`
