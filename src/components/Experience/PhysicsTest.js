@@ -20,7 +20,7 @@ const MODEL_URL2 = "/assets/models/mahjong2.glb";
 const MODEL_URL3 = "/assets/models/mahjong1.glb";
 
 // helper (put this above where you build `baubles`)
-const randomWarmVivid = () => {
+export const randomWarmVivid = () => {
   // Hue ranges (normalized 0–1): [red], [purple/magenta], [orange]
   const ranges = [
     [0.0, 0.08], // red

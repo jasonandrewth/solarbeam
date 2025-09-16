@@ -57,7 +57,7 @@ export default function Home() {
         width={666 * 2}
         height={375 * 2}
       /> */}
-      <span className="comingSoon">COMING SOON</span>
+      {/* <span className="comingSoon">COMING SOON</span> */}
     </main>
   );
 }

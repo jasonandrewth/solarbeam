@@ -16,6 +16,7 @@ import { MediaQueries } from "@/styles/mixins/MediaQueries";
 import Stone from "./Stone";
 import PhysicsTest, { StonePrimitive } from "./PhysicsTest";
 import BGPlane from "./BGPlane";
+import TestNav from "./TestNav";
 
 const Experience = () => {
   const isReady = useRef(false);
@@ -110,7 +111,7 @@ const Experience = () => {
       {isMobile && (
         <OrbitControls enableDamping enablePan={false} enableZoom={false} />
       )}
-      <Physics debug={false} timeStep={1 / 30} gravity={[0, 0, 0]}>
+      {/* <Physics debug={false} timeStep={1 / 30} gravity={[0, 0, 0]}>
         <Suspense
           fallback={
             <mesh position-y={0.0} scale={[2, 3, 2]}>
@@ -119,12 +120,13 @@ const Experience = () => {
             </mesh>
           }
         >
-          {/* <Stone position={-1.5} url="/assets/models/mahjong2.glb" /> */}
           <StonePrimitive url="/assets/models/mahjong2.glb" />
 
           <PhysicsTest />
         </Suspense>
-      </Physics>
+      </Physics> */}
+
+      <TestNav />
 
       {/* <BGPlane z={-100} color="#0a8f4d" opacity={0.85} /> */}
 
@@ -168,7 +170,7 @@ const Experience = () => {
           luminanceSmoothing={0.9}
           height={300}
         />
-        <Noise opacity={0.06} />
+        <Noise opacity={0.02} />
         <N8AO distanceFalloff={1} aoRadius={1} intensity={4} />
       </EffectComposer>
     </>

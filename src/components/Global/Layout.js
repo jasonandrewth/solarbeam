@@ -13,6 +13,7 @@ import { ReactLenis, useLenis } from "lenis/react";
 import { cancelFrame, frame } from "motion/react";
 import { Meta } from "@/components/Global/Head/Meta";
 import { Favicons } from "@/components/Global/Head/Favicons";
+import { motion } from "motion/react";
 
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
@@ -80,14 +81,26 @@ const Layout = ({ children }) => {
         }}
       >
         <main ref={ref} className={roboto.className} css={styles.main}>
-          <Header />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1, ease: "easeInOut" }}
+          >
+            <Header />
+          </motion.div>
           <div
             css={styles.backdrop}
             data-visible={pathname === "/about" || pathname === "/archive"}
           />
           <PageTransitions>{children}</PageTransitions>
-          {/* <Scene eventSource={ref} eventPrefix="client" /> */}
-          <Footer />
+          <Scene eventSource={ref} eventPrefix="client" />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Footer />
+          </motion.div>
         </main>
       </ReactLenis>
     </>
