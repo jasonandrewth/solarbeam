@@ -109,7 +109,14 @@ const Experience = () => {
       />
       {/* <pointLight distance={40} intensity={8} color="lightblue" /> */}
       {isMobile && (
-        <OrbitControls enableDamping enablePan={false} enableZoom={false} />
+        <OrbitControls
+          enableDamping
+          enablePan={false}
+          enableZoom={false}
+          maxPolarAngle={Math.PI * 0.5}
+          maxAzimuthAngle={Math.Pi * 0.25}
+          enableRotate={false}
+        />
       )}
       {/* <Physics debug={false} timeStep={1 / 30} gravity={[0, 0, 0]}>
         <Suspense

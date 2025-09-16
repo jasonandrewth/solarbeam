@@ -65,7 +65,7 @@ const styles = {
     padding-top: 12rem;
 
     @media ${MediaQueries.medium} {
-      padding-top: calc(var(--gap-xl) + var(--gap-m));
+      padding-top: calc(var(--gap-xl) + var(--gap-xl));
     }
   `,
 };
