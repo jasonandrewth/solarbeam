@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 const Header = () => {
   const pathname = usePathname();
-  const isDark = pathname !== "/" || pathname !== "/gallery";
+  const isDark = pathname === "/about" || pathname === "/archive";
   return (
     <header data-about={isDark} css={styles.header}>
       <Link href={"/"} data-about={isDark} css={styles.logo}>
@@ -67,6 +67,9 @@ const styles = {
       color: var(--color--black);
       transition: color 0.25s linear;
     } */
+    * {
+      color: var(--color--black);
+    }
 
     &[data-about="true"] {
       * {
@@ -76,12 +79,12 @@ const styles = {
 
     @media ${MediaQueries.medium} {
       /* min-height: 65vh; */
-      align-items: center;
-      * {
+      /* align-items: center; */
+      /* * {
         display: block;
         line-height: 0;
         font-size: 32px;
-      }
+      } */
     }
   `,
   nav: css`
@@ -197,9 +200,9 @@ const styles = {
     top: 0;
     right: 0;
 
-    * {
+    /* * {
       font-size: 64px;
       line-height: 0;
-    }
+    } */
   `,
 };
