@@ -114,8 +114,8 @@ const Experience = () => {
           enablePan={false}
           enableZoom={false}
           maxPolarAngle={Math.PI * 0.5}
-          maxAzimuthAngle={Math.Pi * 0.25}
-          enableRotate={false}
+          minAzimuthAngle={-Math.PI / 4}
+          maxAzimuthAngle={Math.PI / 4}
         />
       )}
       {/* <Physics debug={false} timeStep={1 / 30} gravity={[0, 0, 0]}>
