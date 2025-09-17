@@ -74,9 +74,8 @@ const Layout = ({ children }) => {
         ref={lenisRef}
         root
         options={{
-          syncTouch: isInfnite, // let touch input stay native on mobile
+          syncTouch: true, // let touch input stay native on mobile
           duration: isMobile ? 0.1 : 0.4, // adjust smoothing duration
-          smoothTouch: false, // explicitly disable smooth-touch inertia
           infinite: isInfnite,
           autoRaf: false,
         }}

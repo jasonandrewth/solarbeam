@@ -47,6 +47,8 @@ const ArchivePage = () => {
                   alt={`image-${idx}`}
                   fill
                   style={{ objectFit: "cover" }}
+                  placeholder="blur"
+                  blurDataURL={url}
                 />
               </div>
             </article>
