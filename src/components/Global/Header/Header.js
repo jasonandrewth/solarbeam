@@ -6,9 +6,13 @@ import Link from "next/link";
 import Logo from "@/Icons/Logo";
 import { usePathname } from "next/navigation";
 
+import { useGlobalData } from "@/context/globalContext";
+
 const Header = () => {
   const pathname = usePathname();
-  const isDark = pathname === "/about" || pathname === "/archive";
+  const isDark = pathname !== "/";
+
+  const { selectedNavItem } = useGlobalData();
   return (
     <header data-about={isDark} css={styles.header}>
       <Link href={"/"} data-about={isDark} css={styles.logo}>
@@ -27,14 +31,35 @@ const Header = () => {
       <nav css={styles.nav}>
         <ul>
           <Link href={"archive"} data-about={isDark}>
-            <li>archive</li>
+            <li
+              css={styles.navItem}
+              data-active={
+                pathname === "/archive" || selectedNavItem === "/archive"
+              }
+            >
+              archive
+            </li>
           </Link>
 
           <Link href={"gallery"} data-about={isDark}>
-            <li>gallery</li>
+            <li
+              css={styles.navItem}
+              data-active={
+                pathname === "/gallery" || selectedNavItem === "/gallery"
+              }
+            >
+              gallery
+            </li>
           </Link>
           <Link href={"about"} data-about={isDark}>
-            <li>about</li>
+            <li
+              css={styles.navItem}
+              data-active={
+                pathname === "/about" || selectedNavItem === "/about"
+              }
+            >
+              about
+            </li>
           </Link>
         </ul>
       </nav>
@@ -208,5 +233,21 @@ const styles = {
       font-size: 64px;
       line-height: 0;
     } */
+  `,
+
+  navItem: css`
+    text-transform: capitalize;
+    font-weight: 300;
+    opacity: 0.8;
+    transition: all 0.45s linear;
+    &[data-active="true"] {
+      font-weight: 700;
+      opacity: 1;
+    }
+
+    &:hover {
+      opacity: 1;
+      font-weight: 700;
+    }
   `,
 };

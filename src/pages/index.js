@@ -4,6 +4,8 @@ import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
 import Image from "next/image";
 import localFont from "next/font/local";
+import { useGlobalData } from "@/context/globalContext";
+import { useEffect } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,6 +19,12 @@ const geistMono = localFont({
 });
 
 export default function Home() {
+  const { setSelectedNavItem } = useGlobalData();
+
+  useEffect(() => {
+    setSelectedNavItem("");
+  }, []);
+
   return (
     <main
       css={css`

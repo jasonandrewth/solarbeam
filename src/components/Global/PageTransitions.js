@@ -2,6 +2,7 @@
 import { css } from "@emotion/react";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
+import { useLenis } from "lenis/react";
 import { useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -36,6 +37,15 @@ const TransitionSetting = {
 
 const PageTransitions = ({ children }) => {
   const pathname = usePathname();
+
+  const lenis = useLenis(({ scroll }) => {});
+
+  // Always scroll to top on route change using Lenis
+  useEffect(() => {
+    if (!lenis) return;
+    // Scroll instantly to the very top (no animation) so transitions feel crisp
+    lenis.scrollTo(0, { immediate: true });
+  }, [pathname, lenis]);
 
   return (
     <AnimatePresence mode="wait" initial={false}>

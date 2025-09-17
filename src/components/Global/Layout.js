@@ -9,7 +9,7 @@ import PageTransitions from "./PageTransitions";
 
 import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
-import { ReactLenis, useLenis } from "lenis/react";
+import { ReactLenis } from "lenis/react";
 import { cancelFrame, frame } from "motion/react";
 import { Meta } from "@/components/Global/Head/Meta";
 import { Favicons } from "@/components/Global/Head/Favicons";
@@ -21,6 +21,7 @@ import Footer from "./Footer/Footer";
 import Scene from "@/components/Experience/Scene";
 import { usePathname } from "next/navigation";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { GlobalContextProvider } from "@/context/globalContext";
 
 // const Scene = dynamic(() => import("@/components/Experience/Scene"), {
 //   ssr: false,
@@ -74,34 +75,33 @@ const Layout = ({ children }) => {
         root
         options={{
           syncTouch: isInfnite, // let touch input stay native on mobile
-          duration: isMobile ? 0.1 : 1.2, // adjust smoothing duration
+          duration: isMobile ? 0.1 : 0.4, // adjust smoothing duration
           smoothTouch: false, // explicitly disable smooth-touch inertia
           infinite: isInfnite,
           autoRaf: false,
         }}
       >
-        <main ref={ref} className={roboto.className} css={styles.main}>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1, ease: "easeInOut" }}
-          >
-            <Header />
-          </motion.div>
-          <div
-            css={styles.backdrop}
-            data-visible={pathname === "/about" || pathname === "/archive"}
-          />
-          <PageTransitions>{children}</PageTransitions>
-          <Scene eventSource={ref} eventPrefix="client" />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1, ease: "easeInOut" }}
-          >
-            <Footer />
-          </motion.div>
-        </main>
+        <GlobalContextProvider>
+          <main ref={ref} className={roboto.className} css={styles.main}>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1, ease: "easeInOut" }}
+            >
+              <Header />
+            </motion.div>
+            <div css={styles.backdrop} data-visible={pathname !== "/"} />
+            <PageTransitions>{children}</PageTransitions>
+            <Scene eventSource={ref} eventPrefix="client" />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1, ease: "easeInOut" }}
+            >
+              <Footer />
+            </motion.div>
+          </main>
+        </GlobalContextProvider>
       </ReactLenis>
     </>
   );

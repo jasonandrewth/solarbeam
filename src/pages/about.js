@@ -82,7 +82,7 @@ const styles = {
   `,
 
   body: css`
-    width: 50%;
+    width: 66rem;
     opacity: 1;
     /* transform: translateX(var(--gap-l)); */
     /* padding-top: var(--gap-s); */
@@ -90,7 +90,7 @@ const styles = {
     /* user-select: none; */
     position: relative;
     z-index: 1;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.75);
     @media ${MediaQueries.mobile} {
       transform: none;
       padding-top: 0;

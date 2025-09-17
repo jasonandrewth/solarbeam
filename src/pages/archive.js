@@ -2,6 +2,8 @@
 import { css } from "@emotion/react";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
 import Image from "next/image";
+import { useEffect } from "react";
+import { useGlobalData } from "@/context/globalContext";
 
 const mockData = [
   {
@@ -26,6 +28,12 @@ const mockData = [
   },
 ];
 const ArchivePage = () => {
+  const { setSelectedNavItem } = useGlobalData();
+
+  useEffect(() => {
+    setSelectedNavItem("/archive");
+  }, []);
+
   return (
     <>
       <div css={styles.grid}>

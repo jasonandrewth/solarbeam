@@ -1,5 +1,5 @@
 "use client";
-import React, { memo, useState } from "react";
+import React, { memo, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useCursor, useGLTF } from "@react-three/drei";
 import { Float } from "@react-three/drei";
@@ -8,15 +8,20 @@ import * as THREE from "three";
 import { randomWarmVivid } from "./PhysicsTest";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
+import { useGlobalData } from "@/context/globalContext";
 
 const MODEL_URL = "/assets/models/mahjongborderinset.glb";
 const MODEL_URL2 = "/assets/models/mahjong2.glb";
 const MODEL_URL3 = "/assets/models/mahjong1.glb";
 
+// Generate once per module load to avoid re-randomizing on route changes/rerenders
+
+const GREEN = new THREE.Color("#0a8f4d");
+const IVORY = new THREE.Color("#f4f4efff");
+
 function StoneLink({
   position = [0, 0, 0],
   href = "/",
-  mat,
   glassMat,
   baseMat,
   type = 1,
@@ -25,12 +30,16 @@ function StoneLink({
   const router = useRouter();
   const [hovered, setHovered] = useState(false);
   const ref = React.useRef();
+
+  const { selectedNavItem, setSelectedNavItem } = useGlobalData();
+
   useCursor(!isMobile && hovered, "pointer", "auto");
 
   const defaultRot = React.useRef(new THREE.Euler(Math.PI * 0.5, 0, 0));
   const rotTarget = React.useRef(new THREE.Euler().copy(defaultRot.current));
 
   const baseY = position[1] || 0;
+
   // Smooth lift on hover
   const handlePointerMove = (e) => {
     e.stopPropagation();
@@ -88,17 +97,28 @@ function StoneLink({
           ? undefined
           : (e) => {
               e.stopPropagation();
+              setSelectedNavItem(href);
+              console.log(selectedNavItem, "navsel");
               setHovered(true);
             }
       }
-      onPointerOut={isMobile ? undefined : () => setHovered(false)}
+      onPointerEnter={() => {
+        setSelectedNavItem(href);
+        console.log(selectedNavItem, href, "navsel");
+      }}
+      onPointerOut={
+        isMobile
+          ? undefined
+          : () => {
+              setHovered(false);
+              setSelectedNavItem("");
+            }
+      }
     >
-      {(type === 1 && (
-        <Stone1 mat={mat} glassMat={glassMat} material={baseMat} />
-      )) ||
-        (type === 2 && (
-          <Stone2 mat={mat} glassMat={glassMat} material={baseMat} />
-        )) || <Stone3 mat={mat} glassMat={glassMat} material={baseMat} />}
+      {(type === 1 && <Stone1 glassMat={glassMat} material={baseMat} />) ||
+        (type === 2 && <Stone2 glassMat={glassMat} material={baseMat} />) || (
+          <Stone3 glassMat={glassMat} material={baseMat} />
+        )}
     </group>
   );
 }
@@ -107,7 +127,7 @@ const Stone1 = memo(function Stone1({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
-  mat,
+
   glassMat,
   material,
   url = MODEL_URL,
@@ -119,7 +139,24 @@ const Stone1 = memo(function Stone1({
   const middle = nodes.FirstStoneBottom005;
   const bottom = nodes.FirstStoneMiddle003;
 
-  const baubleMaterial = mat;
+  const baubleMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color(randomWarmVivid()), // generated once per module
+        roughness: 0.01,
+        metalness: 0.2,
+        transparent: false,
+        depthWrite: true,
+        depthTest: true,
+      }),
+    []
+  );
+
+  React.useEffect(() => {
+    return () => {
+      baubleMaterial.dispose?.();
+    };
+  }, [baubleMaterial]);
 
   return (
     <group>
@@ -141,7 +178,7 @@ const Stone2 = memo(function Stone1({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
-  mat,
+
   glassMat,
   material,
   url = MODEL_URL2,
@@ -159,7 +196,24 @@ const Stone2 = memo(function Stone1({
     nodes["SYMBOL-4002"],
   ];
 
-  const baubleMaterial = mat;
+  const baubleMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color(randomWarmVivid()), // generated once per module
+        roughness: 0.01,
+        metalness: 0.2,
+        transparent: false,
+        depthWrite: true,
+        depthTest: true,
+      }),
+    []
+  );
+
+  React.useEffect(() => {
+    return () => {
+      baubleMaterial.dispose?.();
+    };
+  }, [baubleMaterial]);
 
   return (
     <group>
@@ -196,7 +250,7 @@ const Stone3 = memo(function Stone1({
   vec = new THREE.Vector3(),
   scale,
   r = THREE.MathUtils.randFloatSpread,
-  mat,
+
   glassMat,
   material,
   url = MODEL_URL3,
@@ -208,7 +262,24 @@ const Stone3 = memo(function Stone1({
   const middle = nodes.FirstStoneMiddle;
   const bottom = nodes.FirstStoneBottom001;
 
-  const baubleMaterial = mat;
+  const baubleMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: new THREE.Color(randomWarmVivid()), // generated once per module
+        roughness: 0.01,
+        metalness: 0.2,
+        transparent: false,
+        depthWrite: true,
+        depthTest: true,
+      }),
+    []
+  );
+
+  React.useEffect(() => {
+    return () => {
+      baubleMaterial.dispose?.();
+    };
+  }, [baubleMaterial]);
 
   return (
     <group rotation={[0, 0, Math.PI]}>
@@ -230,42 +301,36 @@ const Stone3 = memo(function Stone1({
 });
 
 const TestNav = () => {
-  const green = new THREE.Color("#0a8f4d");
-  const ivory = new THREE.Color("#f4f4efff");
+  // Materials are memoized so they are created once per mount and reused
+  const glassMat = useMemo(
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        color: GREEN, // emerald-like green base
+        transmission: 0.8,
+        ior: 1.57,
+        thickness: 1.0,
+        roughness: 0.3,
+        metalness: 0.0,
+      }),
+    []
+  );
 
-  // Opaque materials (avoid transparency sorting/blending issues)
+  const material = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: IVORY,
+        roughness: 0.1,
+        metalness: 0.0,
+      }),
+    []
+  );
 
-  const glassMat = new THREE.MeshPhysicalMaterial({
-    // Emerald-like green base
-    color: green,
-    // Physically based transmission/refraction
-
-    transmission: 0.8, // enable real refraction
-    ior: 1.57, // emerald ~1.57
-    thickness: 1.0, // controls refraction path length
-    // Crisp, glassy surface
-    roughness: 0.3,
-    metalness: 0.0,
-
-    //   envMapIntensity: 2.0,
-
-    //   side: THREE.DoubleSide,
-  });
-
-  const material = new THREE.MeshStandardMaterial({
-    color: ivory,
-    roughness: 0.1,
-    metalness: 0.0,
-  });
-
-  const mat = new THREE.MeshStandardMaterial({
-    color: randomWarmVivid(),
-    roughness: 0.01,
-    metalness: 0.2,
-    transparent: false,
-    depthWrite: true,
-    depthTest: true,
-  });
+  React.useEffect(() => {
+    return () => {
+      glassMat.dispose?.();
+      material.dispose?.();
+    };
+  }, [glassMat, material]);
 
   const isMobile = useMediaQuery(MediaQueries.mobile);
 
@@ -295,7 +360,6 @@ const TestNav = () => {
             key={l.href}
             position={positions[i]}
             href={l.href}
-            mat={mat}
             glassMat={glassMat}
             baseMat={material}
             type={l.type}
