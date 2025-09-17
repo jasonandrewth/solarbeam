@@ -75,7 +75,7 @@ const Layout = ({ children }) => {
         root
         options={{
           syncTouch: true, // let touch input stay native on mobile
-          duration: isMobile ? 0.1 : 0.4, // adjust smoothing duration
+          // duration: isMobile ? 0.1 : 0.4, // adjust smoothing duration
           infinite: isInfnite,
           autoRaf: false,
         }}
