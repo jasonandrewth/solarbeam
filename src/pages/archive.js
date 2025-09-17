@@ -9,22 +9,27 @@ const mockData = [
   {
     title: "Vetements by Demna Gvasalia AW 2016",
     size: "Size M",
+    url: "/assets/imgs/archive/vetements.jpg",
   },
   {
     title: "Vetements by Demna Gvasalia AW 2016",
     size: "Size M",
+    url: "/assets/imgs/archive/ar1.jpg",
   },
   {
     title: "Vetements by Demna Gvasalia AW 2016",
     size: "Size M",
+    url: "/assets/imgs/archive/ar2.jpg",
   },
   {
     title: "Vetements by Demna Gvasalia AW 2016",
     size: "Size M",
+    url: "/assets/imgs/archive/ar3.jpg",
   },
   {
     title: "Vetements by Demna Gvasalia AW 2016",
     size: "Size M",
+    url: "/assets/imgs/archive/ar4.jpg",
   },
 ];
 const ArchivePage = () => {
@@ -42,8 +47,8 @@ const ArchivePage = () => {
             <article key={idx} css={styles.card}>
               <div css={styles.aspectRatio}>
                 <Image
-                  src={"/assets/imgs/vetements.jpg"}
-                  alt={"vet"}
+                  src={article.url}
+                  alt={article.title}
                   fill
                   style={{ objectFit: "cover" }}
                 />
@@ -99,6 +104,14 @@ const styles = {
     height: auto;
     aspect-ratio: 3 / 4; /* height derives from width */
     overflow: hidden; /* ensure the fill image never bleeds */
+
+    img {
+      transition: transform 0.4s ease;
+    }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
   `,
   content: css`
     position: relative;

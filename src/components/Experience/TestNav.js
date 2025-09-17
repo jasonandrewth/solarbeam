@@ -33,10 +33,23 @@ function StoneLink({
 
   const { selectedNavItem, setSelectedNavItem } = useGlobalData();
 
+  const hitSound = React.useMemo(
+    () => (!isMobile ? new Audio("/assets/audio/impact.mp3") : null),
+    [isMobile]
+  );
+
+  const playSound = () => {
+    if (!hitSound) return;
+    hitSound.currentTime = 0;
+    hitSound.volume = Math.random();
+    hitSound.play();
+  };
+
   useCursor(!isMobile && hovered, "pointer", "auto");
 
   const defaultRot = React.useRef(new THREE.Euler(Math.PI * 0.5, 0, 0));
   const rotTarget = React.useRef(new THREE.Euler().copy(defaultRot.current));
+  const hasPlayedRef = React.useRef(false);
 
   const baseY = position[1] || 0;
 
@@ -102,16 +115,24 @@ function StoneLink({
               setHovered(true);
             }
       }
-      onPointerEnter={() => {
+      onPointerEnter={(e) => {
+        if (isMobile) return;
+        e.stopPropagation();
         setSelectedNavItem(href);
-        console.log(selectedNavItem, href, "navsel");
+        if (!hasPlayedRef.current) {
+          playSound();
+          hasPlayedRef.current = true;
+        }
+        setHovered(true);
       }}
       onPointerOut={
         isMobile
           ? undefined
-          : () => {
+          : (e) => {
+              e.stopPropagation();
               setHovered(false);
               setSelectedNavItem("");
+              hasPlayedRef.current = false; // allow sound again on next true enter
             }
       }
     >
