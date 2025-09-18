@@ -12,24 +12,46 @@ const mockData = [
     url: "/assets/imgs/archive/vetements.jpg",
   },
   {
-    title: "Vetements by Demna Gvasalia AW 2016",
-    size: "Size M",
-    url: "/assets/imgs/archive/ar1.jpg",
+    title: "20471120",
+    url: "/assets/imgs/archive/ar12.png",
   },
   {
-    title: "Vetements by Demna Gvasalia AW 2016",
-    size: "Size M",
-    url: "/assets/imgs/archive/ar2.jpg",
+    title: "BLESS N.18 Allroundwear Blouson, 2002",
+    size: "Size OS",
+    url: "/assets/imgs/archive/ar15.png",
   },
   {
-    title: "Vetements by Demna Gvasalia AW 2016",
-    size: "Size M",
+    title: "BLESS N. 28 Climate Confusion Assistance Lingerie Jacket, 2005",
+    size: "Size L",
     url: "/assets/imgs/archive/ar3.jpg",
   },
   {
+    title: "Vetements Checkered Wide Trouser, AW 2017",
+    size: "Size S",
+    url: "/assets/imgs/archive/ar4.jpg",
+  },
+  {
+    title: "Raf Simons Kinetic Youth Pleated Red Trouser, SS 1999",
+    size: "Size 48",
+    url: "/assets/imgs/archive/ar5.jpg",
+  },
+  {
+    title: "A.F. Vandevorst for Ruffo Research Suede Trucker Jacket, AW 2000",
+    size: "Size M",
+    url: "/assets/imgs/archive/ar6.jpg",
+  },
+  {
+    title: "Helmut Lang",
+    url: "/assets/imgs/archive/ar7.png",
+  },
+  {
+    title: "Raf Simons Radioactivity Striped Suit, AW 1998",
+    url: "/assets/imgs/archive/ar10.jpg",
+  },
+  {
     title: "Vetements by Demna Gvasalia AW 2016",
     size: "Size M",
-    url: "/assets/imgs/archive/ar4.jpg",
+    url: "/assets/imgs/archive/ar13.jpg",
   },
 ];
 const ArchivePage = () => {
