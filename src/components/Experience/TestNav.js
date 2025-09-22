@@ -17,7 +17,7 @@ const MODEL_URL3 = "/assets/models/mahjong1.glb";
 // Generate once per module load to avoid re-randomizing on route changes/rerenders
 
 const GREEN = new THREE.Color("#0a8f4d");
-const IVORY = new THREE.Color("#f4f4efff");
+const IVORY = new THREE.Color("#f4f4ef");
 
 function StoneLink({
   position = [0, 0, 0],
@@ -120,8 +120,8 @@ function StoneLink({
         e.stopPropagation();
         setSelectedNavItem(href);
         if (!hasPlayedRef.current) {
-          playSound();
-          hasPlayedRef.current = true;
+          // playSound();
+          // hasPlayedRef.current = true;
         }
         setHovered(true);
       }}
@@ -183,7 +183,7 @@ const Stone1 = memo(function Stone1({
     <group>
       <mesh scale={1} geometry={middle.geometry} material={glassMat} />
       <mesh scale={1} geometry={bottom.geometry} material={material} />
-      <mesh scale={1} geometry={top.geometry} material={glassMat} />
+      <mesh scale={1} geometry={top.geometry} material={material} />
       <mesh
         scale={1}
         position={[symbols.position.x, symbols.position.y, symbols.position.z]}
@@ -240,7 +240,7 @@ const Stone2 = memo(function Stone1({
     <group>
       <mesh scale={1} geometry={middle.geometry} material={glassMat} />
       <mesh scale={1} geometry={bottom.geometry} material={material} />
-      <mesh scale={1} geometry={top.geometry} material={glassMat} />
+      <mesh scale={1} geometry={top.geometry} material={material} />
       <mesh
         position={[logo.position.x, logo.position.y, logo.position.z]}
         geometry={logo.geometry}
@@ -306,7 +306,7 @@ const Stone3 = memo(function Stone1({
     <group rotation={[0, 0, Math.PI]}>
       <mesh scale={1} geometry={middle.geometry} material={material} />
       <mesh scale={1} geometry={bottom.geometry} material={glassMat} />
-      <mesh scale={1} geometry={top.geometry} material={glassMat} />
+      <mesh scale={1} geometry={top.geometry} material={material} />
       <mesh
         scale={1}
         position={[

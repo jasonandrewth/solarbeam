@@ -99,7 +99,7 @@ const Experience = () => {
   return (
     <>
       {/* Studio lighting setup */}
-      <ambientLight intensity={0.66} />
+      <ambientLight intensity={0.86} />
       <spotLight
         position={[10, 10, 10]}
         angle={0.15}

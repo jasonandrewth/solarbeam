@@ -51,7 +51,7 @@ const baubles = [...Array(14)].map(() => ({
 const colors = baubles.map((b) => b.color);
 
 const green = new THREE.Color("#0a8f4d");
-const ivory = new THREE.Color("#f4f4efff");
+const ivory = new THREE.Color("#f4f4ef");
 
 // Opaque materials (avoid transparency sorting/blending issues)
 
