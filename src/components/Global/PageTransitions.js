@@ -55,6 +55,7 @@ const PageTransitions = ({ children }) => {
         exit="exit"
         key={pathname}
         variants={TransitionSetting}
+        data-gallery={pathname == "/gallery"}
         css={styles.main}
         // transition={{ duration: 0.5 }}
         // style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
@@ -73,6 +74,10 @@ const styles = {
     font-size: var(--type--scale---0);
     min-height: 100vh;
     padding-top: 12rem;
+
+    &[data-gallery="true"] {
+      padding-top: 0;
+    }
 
     @media ${MediaQueries.medium} {
       padding-top: calc(var(--gap-xl) + var(--gap-xl));
