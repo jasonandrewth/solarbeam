@@ -114,6 +114,7 @@ const ArchivePage = () => {
                   fill
                   style={{ objectFit: "contain", objectPosition: "center" }}
                   priority
+                  onClick={() => setLightboxSrc(null)}
                 />
               </div>
             </motion.div>
