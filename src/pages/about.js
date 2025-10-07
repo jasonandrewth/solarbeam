@@ -4,6 +4,7 @@ import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
 import { useState } from "react";
 import ChevronDown from "@/Icons/Chevron";
+import Logo from "@/Icons/Logo";
 
 const AboutPage = () => {
   const [visible, setVisible] = useState(true);
@@ -55,6 +56,8 @@ const AboutPage = () => {
             Schedule Appointment <ChevronDown />
           </button>
         </a>
+
+        <Logo css={styles.logo} />
       </div>
     </>
   );
@@ -79,6 +82,9 @@ const styles = {
     font-size: 1.1rem;
     line-height: var(--type--lineheight--0);
     white-space: nowrap;
+    color: red;
+    max-width: 40%;
+    display: none;
   `,
 
   body: css`

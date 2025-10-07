@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 
 import { useGlobalData } from "@/context/globalContext";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 const Header = () => {
   const pathname = usePathname();
@@ -16,32 +17,39 @@ const Header = () => {
 
   const { selectedNavItem } = useGlobalData();
 
-  const NavItem = ({ href, label, active, defaultActive, external }) => (
-    <Link
-      href={href}
-      target={external && "_blank"}
-      data-about={isDark}
-      css={styles.navLink}
-    >
-      <li css={styles.navItem} data-active={active}>
-        {(active || defaultActive) && (
-          <motion.div
-            layoutId="navHighlight"
-            transition={{
-              type: "spring",
-              stiffness: 500,
-              damping: 40,
-              mass: 0.3,
-            }}
-            animate={{ opacity: defaultActive ? 0 : 1 }}
-            style={{ position: "absolute", inset: 0, borderRadius: 9999 }}
-            css={styles.navHighlight}
-          />
-        )}
-        <span css={styles.navLabel}>{label}</span>
-      </li>
-    </Link>
-  );
+  const isMobile = useMediaQuery(MediaQueries.mobile);
+
+  const NavItem = ({ href, label, active, defaultActive, external }) => {
+    if (isMobile) {
+      defaultActive = false;
+    }
+    return (
+      <Link
+        href={href}
+        target={external && "_blank"}
+        data-about={isDark}
+        css={styles.navLink}
+      >
+        <li css={styles.navItem} data-active={active}>
+          {(active || defaultActive) && (
+            <motion.div
+              layoutId="navHighlight"
+              transition={{
+                layout: {
+                  duration: 0.2,
+                  ease: "easeOut",
+                },
+              }}
+              animate={{ opacity: defaultActive ? 0 : 1 }}
+              style={{ position: "absolute", inset: 0, borderRadius: 9999 }}
+              css={styles.navHighlight}
+            />
+          )}
+          <span css={styles.navLabel}>{label}</span>
+        </li>
+      </Link>
+    );
+  };
 
   return (
     <header data-about={isDark} css={styles.header}>
@@ -59,11 +67,29 @@ const Header = () => {
       </Link> */}
 
       <nav css={styles.nav}>
-        <motion.ul layout css={styles.navPill} initial={false}>
+        <ul css={styles.navPill}>
+          {isMobile && (
+            <NavItem
+              href={"/"}
+              label="home"
+              active={pathname === "/"}
+              defaultActive={
+                !(
+                  pathname === "/gallery" ||
+                  pathname === "/about" ||
+                  pathname === "/archive" ||
+                  selectedNavItem
+                )
+              }
+            />
+          )}
           <NavItem
             href={"archive"}
             label="archive"
-            active={pathname === "/archive" || selectedNavItem === "/archive"}
+            active={
+              pathname === "/archive" ||
+              (!isMobile && selectedNavItem === "/archive")
+            }
             defaultActive={
               !(
                 pathname === "/gallery" ||
@@ -76,7 +102,10 @@ const Header = () => {
           <NavItem
             href={"gallery"}
             label="gallery"
-            active={pathname === "/gallery" || selectedNavItem === "/gallery"}
+            active={
+              pathname === "/gallery" ||
+              (!isMobile && selectedNavItem === "/gallery")
+            }
             defaultActive={
               !(
                 pathname === "/gallery" ||
@@ -89,7 +118,10 @@ const Header = () => {
           <NavItem
             href={"about"}
             label="about"
-            active={pathname === "/about" || selectedNavItem === "/about"}
+            active={
+              pathname === "/about" ||
+              (!isMobile && selectedNavItem === "/about")
+            }
             defaultActive={
               !(
                 pathname === "/gallery" ||
@@ -113,7 +145,7 @@ const Header = () => {
               )
             }
           />
-        </motion.ul>
+        </ul>
       </nav>
     </header>
   );
@@ -156,6 +188,15 @@ const styles = {
 
     @media ${MediaQueries.medium} {
       padding: var(--gap-s) var(--gap-l);
+
+      justify-content: center;
+
+      /* svg {
+        display: none;
+        width: 64px;
+        height: auto;
+        padding: 0;
+      } */
     }
   `,
   nav: css`
@@ -165,6 +206,8 @@ const styles = {
 
     @media ${MediaQueries.mobile} {
       font-size: var(--type--scale--1);
+      /* margin-top: 32px; */
+      /* opacity: 0.25; */
 
       svg {
         width: 64px;
@@ -179,9 +222,9 @@ const styles = {
     gap: var(--gap-s);
     list-style: none;
     margin: 0;
-    padding: 6px;
+    padding: 4px;
     border-radius: 9999px;
-    background: var(--color--black);
+    background: rgba(82, 82, 82, 0.8);
     border: 1px solid rgb(82 82 82 / 1);
   `,
   navLink: css`
@@ -220,6 +263,11 @@ const styles = {
     }
 
     @media ${MediaQueries.mobile} {
+      position: absolute;
+      top: 6%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
       svg {
         width: 64px;
         height: auto;
