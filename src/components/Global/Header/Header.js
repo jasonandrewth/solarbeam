@@ -6,6 +6,8 @@ import Link from "next/link";
 import Logo from "@/Icons/Logo";
 import { usePathname } from "next/navigation";
 
+import { motion } from "motion/react";
+
 import { useGlobalData } from "@/context/globalContext";
 
 const Header = () => {
@@ -13,6 +15,34 @@ const Header = () => {
   const isDark = pathname !== "/";
 
   const { selectedNavItem } = useGlobalData();
+
+  const NavItem = ({ href, label, active, defaultActive, external }) => (
+    <Link
+      href={href}
+      target={external && "_blank"}
+      data-about={isDark}
+      css={styles.navLink}
+    >
+      <li css={styles.navItem} data-active={active}>
+        {(active || defaultActive) && (
+          <motion.div
+            layoutId="navHighlight"
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 40,
+              mass: 0.3,
+            }}
+            animate={{ opacity: defaultActive ? 0 : 1 }}
+            style={{ position: "absolute", inset: 0, borderRadius: 9999 }}
+            css={styles.navHighlight}
+          />
+        )}
+        <span css={styles.navLabel}>{label}</span>
+      </li>
+    </Link>
+  );
+
   return (
     <header data-about={isDark} css={styles.header}>
       <Link href={"/"} data-about={isDark} css={styles.logo}>
@@ -29,39 +59,61 @@ const Header = () => {
       </Link> */}
 
       <nav css={styles.nav}>
-        <ul>
-          <Link href={"archive"} data-about={isDark}>
-            <li
-              css={styles.navItem}
-              data-active={
-                pathname === "/archive" || selectedNavItem === "/archive"
-              }
-            >
-              archive
-            </li>
-          </Link>
-
-          <Link href={"gallery"} data-about={isDark}>
-            <li
-              css={styles.navItem}
-              data-active={
-                pathname === "/gallery" || selectedNavItem === "/gallery"
-              }
-            >
-              gallery
-            </li>
-          </Link>
-          <Link href={"about"} data-about={isDark}>
-            <li
-              css={styles.navItem}
-              data-active={
-                pathname === "/about" || selectedNavItem === "/about"
-              }
-            >
-              about
-            </li>
-          </Link>
-        </ul>
+        <motion.ul layout css={styles.navPill} initial={false}>
+          <NavItem
+            href={"archive"}
+            label="archive"
+            active={pathname === "/archive" || selectedNavItem === "/archive"}
+            defaultActive={
+              !(
+                pathname === "/gallery" ||
+                pathname === "/about" ||
+                pathname === "/archive" ||
+                selectedNavItem
+              )
+            }
+          />
+          <NavItem
+            href={"gallery"}
+            label="gallery"
+            active={pathname === "/gallery" || selectedNavItem === "/gallery"}
+            defaultActive={
+              !(
+                pathname === "/gallery" ||
+                pathname === "/about" ||
+                pathname === "/archive" ||
+                selectedNavItem
+              )
+            }
+          />
+          <NavItem
+            href={"about"}
+            label="about"
+            active={pathname === "/about" || selectedNavItem === "/about"}
+            defaultActive={
+              !(
+                pathname === "/gallery" ||
+                pathname === "/about" ||
+                pathname === "/archive" ||
+                selectedNavItem
+              )
+            }
+          />
+          <NavItem
+            href={"https://solarbeamkingdom.shop/"}
+            external
+            label="shop"
+            active={false}
+            defaultActive={
+              !(
+                pathname === "/gallery" ||
+                pathname === "/about" ||
+                pathname === "/archive" ||
+                selectedNavItem
+              )
+            }
+          />
+        </motion.ul>
       </nav>
     </header>
   );
@@ -108,13 +160,8 @@ const styles = {
   `,
   nav: css`
     position: relative;
-    font-size: var(--type--scale--1);
-    line-height: var(--type--lineheight--1);
-
-    ul {
-      display: flex;
-      gap: var(--gap-m);
-    }
+    display: flex;
+    align-items: center;
 
     @media ${MediaQueries.mobile} {
       font-size: var(--type--scale--1);
@@ -125,6 +172,20 @@ const styles = {
         padding: 0;
       }
     }
+  `,
+  navPill: css`
+    position: relative;
+    display: flex;
+    gap: var(--gap-s);
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    border-radius: 9999px;
+    background: var(--color--black);
+    border: 1px solid rgb(82 82 82 / 1);
+  `,
+  navLink: css`
+    text-decoration: none;
   `,
   menuIcon: css`
     transform: rotate(0);
@@ -234,20 +295,22 @@ const styles = {
       line-height: 0;
     } */
   `,
-
   navItem: css`
+    position: relative;
+    border-radius: 9999px;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    /* overflow: hidden; */
+  `,
+  navHighlight: css`
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+  `,
+  navLabel: css`
+    position: relative;
+    z-index: 1;
+    color: var(--color--white);
+    font-weight: 500;
     text-transform: capitalize;
-    font-weight: 300;
-    opacity: 0.8;
-    transition: all 0.45s linear;
-    &[data-active="true"] {
-      font-weight: 700;
-      opacity: 1;
-    }
-
-    &:hover {
-      opacity: 1;
-      font-weight: 700;
-    }
   `,
 };

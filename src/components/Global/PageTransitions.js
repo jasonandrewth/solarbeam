@@ -5,7 +5,7 @@ import { MediaQueries } from "@/styles/mixins/MediaQueries";
 import { useLenis } from "lenis/react";
 import { useRef, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 let easing = [0.175, 0.85, 0.42, 0.96];
 
