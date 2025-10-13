@@ -91,7 +91,10 @@ const Layout = ({ children }) => {
             </motion.div>
             <div css={styles.backdrop} data-visible={pathname !== "/"} />
             <PageTransitions>{children}</PageTransitions>
-            <Scene eventSource={ref} eventPrefix="client" />
+            <Scene
+              eventSource={pathname === "/" ? ref : null}
+              eventPrefix="client"
+            />
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
