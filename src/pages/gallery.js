@@ -7,6 +7,9 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { AnimatePresence, motion } from "motion/react";
 
+import { client } from "@/sanity/client";
+import { galleryQuery } from "@/sanity/queries";
+
 const mockData = [
   "/assets/imgs/1.jpg",
   "/assets/imgs/2.jpg",
@@ -30,7 +33,7 @@ const mockData = [
   "/assets/imgs/20.jpg",
 ];
 
-const ArchivePage = () => {
+const ArchivePage = ({ gallery }) => {
   const { setSelectedNavItem } = useGlobalData();
 
   const isMobile = useMediaQuery(MediaQueries.mobile);
@@ -51,11 +54,11 @@ const ArchivePage = () => {
     }
   }, [lightboxSrc, isMobile]);
 
-  // Group images into pairs
-  const pairs = [];
-  for (let i = 0; i < mockData.length; i += 2) {
-    pairs.push(mockData.slice(i, i + 2));
-  }
+  // Use Sanity data: gallery.imagePairs is already an ordered list of pairs
+  const pairs = (gallery?.imagePairs || []).map((pair) => [
+    pair.image1,
+    pair.image2,
+  ]);
 
   return (
     <>
@@ -63,25 +66,32 @@ const ArchivePage = () => {
         {pairs.map((pair, pIdx) => (
           <section key={pIdx} css={styles.screen}>
             <div css={styles.pair}>
-              {pair.map((url, idx) => (
-                <article key={`${pIdx}-${idx}`} css={styles.card}>
-                  <div
-                    css={[styles.aspectRatio, isMobile && styles.clickable]}
-                    onClick={isMobile ? () => setLightboxSrc(url) : undefined}
-                    role={isMobile ? "button" : undefined}
-                    aria-label={isMobile ? "Open image" : undefined}
-                  >
-                    <Image
-                      src={url}
-                      alt={`image-${pIdx * 2 + idx}`}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      placeholder="blur"
-                      blurDataURL={url}
-                    />
-                  </div>
-                </article>
-              ))}
+              {pair.map((img, idx) => {
+                const url = img?.asset?.url;
+                const alt = img?.alt || `image-${pIdx * 2 + idx}`;
+                const lqip = img?.asset?.metadata?.lqip || undefined;
+                if (!url) return null;
+                return (
+                  <article key={`${pIdx}-${idx}`} css={styles.card}>
+                    <div
+                      css={[styles.aspectRatio, isMobile && styles.clickable]}
+                      onClick={isMobile ? () => setLightboxSrc(url) : undefined}
+                      role={isMobile ? "button" : undefined}
+                      aria-label={isMobile ? "Open image" : undefined}
+                    >
+                      <Image
+                        src={url}
+                        alt={alt}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        placeholder={lqip ? "blur" : undefined}
+                        blurDataURL={lqip}
+                        sizes="(max-width: 768px) 70vw, 50vw"
+                      />
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </section>
         ))}
@@ -124,6 +134,23 @@ const ArchivePage = () => {
     </>
   );
 };
+
+export async function getStaticProps() {
+  try {
+    const data = await client.fetch(galleryQuery);
+    return {
+      props: {
+        gallery: data ?? null,
+      },
+      revalidate: 60, // ISR: rebuild at most once per minute
+    };
+  } catch (e) {
+    return {
+      props: { gallery: null },
+      revalidate: 60,
+    };
+  }
+}
 
 export default ArchivePage;
 
