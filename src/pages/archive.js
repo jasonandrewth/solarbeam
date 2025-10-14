@@ -5,6 +5,9 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { useGlobalData } from "@/context/globalContext";
 
+import { client } from "@/sanity/client";
+import { archiveQuery } from "@/sanity/queries";
+
 const mockData = [
   {
     title: "Vetements by Demna Gvasalia AW 2016",
@@ -54,7 +57,7 @@ const mockData = [
     url: "/assets/imgs/archive/ar13.jpg",
   },
 ];
-const ArchivePage = () => {
+const ArchivePage = ({ archive }) => {
   const { setSelectedNavItem } = useGlobalData();
 
   useEffect(() => {
@@ -64,20 +67,21 @@ const ArchivePage = () => {
   return (
     <>
       <div css={styles.grid}>
-        {mockData.map((article, idx) => {
+        {(archive?.items || mockData).map((article, idx) => {
+          const imageUrl = article.image?.asset?.url || article.url;
           return (
-            <article key={idx} css={styles.card}>
+            <article key={article._id || idx} css={styles.card}>
               <div css={styles.aspectRatio}>
                 <Image
-                  src={article.url}
-                  alt={article.title}
+                  src={imageUrl}
+                  alt={article.image?.alt || article.title}
                   fill
                   style={{ objectFit: "cover" }}
                 />
               </div>
               <div css={styles.content}>
                 <h2>{article.title}</h2>
-                <span css={styles.size}>{article.size}</span>
+                {article.size && <span css={styles.size}>{article.size}</span>}
               </div>
             </article>
           );
@@ -86,6 +90,23 @@ const ArchivePage = () => {
     </>
   );
 };
+
+export async function getStaticProps() {
+  try {
+    const data = await client.fetch(archiveQuery);
+    return {
+      props: {
+        archive: data ?? null,
+      },
+      revalidate: 60, // ISR: rebuild at most once per minute
+    };
+  } catch (e) {
+    return {
+      props: { archive: null },
+      revalidate: 60,
+    };
+  }
+}
 
 export default ArchivePage;
 
