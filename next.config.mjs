@@ -7,6 +7,7 @@ const nextConfig = {
         hostname: "cdn.sanity.io",
       },
     ],
+    unoptimized: true,
   },
   webpack: (config) => {
     config.resolve.fallback = { fs: false, ney: false, tls: false };
