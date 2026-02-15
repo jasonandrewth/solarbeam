@@ -16,12 +16,12 @@ const mockData = [
   },
   {
     title: "20471120",
-    url: "/assets/imgs/archive/ar12.png",
+    url: "/assets/imgs/archive/ar12.jpg",
   },
   {
     title: "BLESS N.18 Allroundwear Blouson, 2002",
     size: "Size OS",
-    url: "/assets/imgs/archive/ar15.png",
+    url: "/assets/imgs/archive/ar15.jpg",
   },
   {
     title: "BLESS N. 28 Climate Confusion Assistance Lingerie Jacket, 2005",
@@ -45,7 +45,7 @@ const mockData = [
   },
   {
     title: "Helmut Lang",
-    url: "/assets/imgs/archive/ar7.png",
+    url: "/assets/imgs/archive/ar7.jpg",
   },
   {
     title: "Raf Simons Radioactivity Striped Suit, AW 1998",

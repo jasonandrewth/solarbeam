@@ -10,29 +10,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { client } from "@/sanity/client";
 import { galleryQuery } from "@/sanity/queries";
 
-const mockData = [
-  "/assets/imgs/1.jpg",
-  "/assets/imgs/2.jpg",
-  "/assets/imgs/3.jpg",
-  "/assets/imgs/4.jpg",
-  "/assets/imgs/5.jpg",
-  "/assets/imgs/6.jpg",
-  "/assets/imgs/7.jpg",
-  "/assets/imgs/8.jpg",
-  "/assets/imgs/9.jpg",
-  "/assets/imgs/10.jpg",
-  "/assets/imgs/11.jpg",
-  "/assets/imgs/12.jpg",
-  "/assets/imgs/13.jpg",
-  "/assets/imgs/14.jpg",
-  "/assets/imgs/15.jpg",
-  "/assets/imgs/16.jpg",
-  "/assets/imgs/17.jpg",
-  "/assets/imgs/18.jpg",
-  "/assets/imgs/19.jpg",
-  "/assets/imgs/20.jpg",
-];
-
 const ArchivePage = ({ gallery }) => {
   const { setSelectedNavItem } = useGlobalData();
 
