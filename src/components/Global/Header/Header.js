@@ -316,7 +316,10 @@ const styles = {
     opacity: 0;
     visibility: hidden;
     transform: translateY(4px);
-    transition: opacity 120ms ease, transform 120ms ease, visibility 120ms ease;
+    transition:
+      opacity 120ms ease,
+      transform 120ms ease,
+      visibility 120ms ease;
     pointer-events: none;
     @media ${MediaQueries.medium} {
       opacity: 1;

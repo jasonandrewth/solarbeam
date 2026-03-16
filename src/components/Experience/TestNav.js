@@ -1,6 +1,7 @@
 "use client";
 import React, { memo, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useCursor, useGLTF } from "@react-three/drei";
 import { Float } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -28,6 +29,8 @@ function StoneLink({
   isMobile = false,
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const isHomepage = pathname === "/";
   const [hovered, setHovered] = useState(false);
   const ref = React.useRef();
 
@@ -45,7 +48,7 @@ function StoneLink({
     hitSound.play();
   };
 
-  useCursor(!isMobile && hovered, "pointer", "auto");
+  useCursor(isHomepage && !isMobile && hovered, "pointer", "auto");
 
   const defaultRot = React.useRef(new THREE.Euler(Math.PI * 0.5, 0, 0));
   const rotTarget = React.useRef(new THREE.Euler().copy(defaultRot.current));
@@ -76,7 +79,7 @@ function StoneLink({
 
   useFrame((_, delta) => {
     if (!ref.current) return;
-    if (isMobile) return; // no hover/tilt on mobile (Float will handle subtle movement)
+    if (isMobile || !isHomepage) return; // no hover/tilt on mobile or non-homepage
 
     // hover lift
     const targetY = baseY + (hovered ? 0.2 : 0);
@@ -100,40 +103,42 @@ function StoneLink({
       ref={ref}
       position={position}
       rotation={[Math.PI * 0.5, 0, 0]}
-      onPointerMove={isMobile ? undefined : handlePointerMove}
-      onClick={(e) => {
-        e.stopPropagation();
-        router.push(href);
-      }}
+      onPointerMove={isHomepage && !isMobile ? handlePointerMove : undefined}
+      onClick={
+        isHomepage
+          ? (e) => {
+              e.stopPropagation();
+              router.push(href);
+            }
+          : undefined
+      }
       onPointerOver={
-        isMobile
-          ? undefined
-          : (e) => {
+        isHomepage && !isMobile
+          ? (e) => {
               e.stopPropagation();
               setSelectedNavItem(href);
-              console.log(selectedNavItem, "navsel");
               setHovered(true);
             }
+          : undefined
       }
-      onPointerEnter={(e) => {
-        if (isMobile) return;
-        e.stopPropagation();
-        setSelectedNavItem(href);
-        if (!hasPlayedRef.current) {
-          // playSound();
-          // hasPlayedRef.current = true;
-        }
-        setHovered(true);
-      }}
+      onPointerEnter={
+        isHomepage && !isMobile
+          ? (e) => {
+              e.stopPropagation();
+              setSelectedNavItem(href);
+              setHovered(true);
+            }
+          : undefined
+      }
       onPointerOut={
-        isMobile
-          ? undefined
-          : (e) => {
+        isHomepage && !isMobile
+          ? (e) => {
               e.stopPropagation();
               setHovered(false);
               setSelectedNavItem("");
-              hasPlayedRef.current = false; // allow sound again on next true enter
+              hasPlayedRef.current = false;
             }
+          : undefined
       }
     >
       {(type === 1 && <Stone1 glassMat={glassMat} material={baseMat} />) ||

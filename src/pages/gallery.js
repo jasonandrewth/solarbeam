@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "motion/react";
 
 import { client } from "@/sanity/client";
 import { galleryQuery } from "@/sanity/queries";
+import { urlFor } from "@/sanity/lib/image";
 
 const ArchivePage = ({ gallery }) => {
   const { setSelectedNavItem } = useGlobalData();
@@ -44,15 +45,16 @@ const ArchivePage = ({ gallery }) => {
           <section key={pIdx} css={styles.screen}>
             <div css={styles.pair}>
               {pair.map((img, idx) => {
-                const url = img?.asset?.url;
+                if (!img?.asset?._id) return null;
+                const url = urlFor(img).width(1200).format("webp").url();
+                const lightboxUrl = urlFor(img).format("webp").url();
                 const alt = img?.alt || `image-${pIdx * 2 + idx}`;
                 const lqip = img?.asset?.metadata?.lqip || undefined;
-                if (!url) return null;
                 return (
                   <article key={`${pIdx}-${idx}`} css={styles.card}>
                     <div
                       css={[styles.aspectRatio, isMobile && styles.clickable]}
-                      onClick={isMobile ? () => setLightboxSrc(url) : undefined}
+                      onClick={isMobile ? () => setLightboxSrc(lightboxUrl) : undefined}
                       role={isMobile ? "button" : undefined}
                       aria-label={isMobile ? "Open image" : undefined}
                     >
@@ -133,11 +135,16 @@ export default ArchivePage;
 
 const styles = {
   stack: css`
+    margin-top: 80px;
     position: relative;
     height: auto; /* fill the screen */
     width: 100%;
     overflow-y: auto; /* internal scroll */
     background: transparent;
+
+    @media ${MediaQueries.mobile} {
+      margin-top: 0;
+    }
   `,
   screen: css`
     height: 100vh;
@@ -174,7 +181,7 @@ const styles = {
 
     * {
       text-transform: uppercase;
-      font-size: var(--type--scale---0);
+      font-size: var(--type--scale---2);
       line-height: var(--type--lineheight--1);
       color: rgba(255, 255, 255, 0.8);
     }

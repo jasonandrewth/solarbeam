@@ -9,7 +9,7 @@ const Type = css`
      * Scale
      */
     --type--scale---3: 0.53rem;
-    --type--scale---2: 0.66rem;
+    --type--scale---2: 0.8125rem;
     //p1
     --type--scale---1: 0.75rem; // 0.7777
     //p2
@@ -29,7 +29,7 @@ const Type = css`
      * Fluid Size
      */
     --fluid--min-vw: 1380;
-    --type--base-size: 12;
+    --type--base-size: 16;
     --type--size: 1;
     --type--max--size: 14;
 
@@ -61,9 +61,9 @@ const Type = css`
     --type--spacing--3: 0.06em;
 
     @media ${MediaQueries.mobile} {
-      --type--base-size: 11;
+      --type--base-size: 14;
 
-      --type--scale---2: 0.5rem;
+      --type--scale---2: 1rem;
       //p1
       --type--scale---1: 0.7rem; // 0.7777
       //p2
@@ -85,6 +85,10 @@ const Type = css`
   *::before,
   *::after {
     font-family: var(--font-sans), Helvetica, Arial, sans-serif;
+  }
+
+  body {
+    font-size: var(--type--scale---2);
   }
 
   html {

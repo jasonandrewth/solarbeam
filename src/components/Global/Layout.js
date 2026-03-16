@@ -15,7 +15,8 @@ import { Meta } from "@/components/Global/Head/Meta";
 import { Favicons } from "@/components/Global/Head/Favicons";
 import { motion } from "motion/react";
 
-import Header from "./Header/Header";
+// import Header from "./Header/Header";
+import Header from "./TopHeader/Header";
 import Footer from "./Footer/Footer";
 
 import Scene from "@/components/Experience/Scene";
@@ -82,13 +83,14 @@ const Layout = ({ children }) => {
       >
         <GlobalContextProvider>
           <main ref={ref} className={roboto.className} css={styles.main}>
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 1, ease: "easeInOut" }}
             >
               <Header />
-            </motion.div>
+            </motion.div> */}
+            <Header />
             <div css={styles.backdrop} data-visible={pathname !== "/"} />
             <PageTransitions>{children}</PageTransitions>
             <Scene

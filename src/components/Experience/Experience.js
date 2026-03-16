@@ -85,7 +85,7 @@ const Experience = () => {
       undefined,
       (err) => {
         console.warn("Failed to load ambient loop:", err);
-      }
+      },
     );
 
     return () => {
@@ -98,16 +98,16 @@ const Experience = () => {
 
   return (
     <>
-      {/* Studio lighting setup */}
-      <ambientLight intensity={0.86} />
-      <spotLight
-        position={[10, 10, 10]}
-        angle={0.15}
-        penumbra={1}
-        intensity={1}
-        // castShadow
-      />
-      {/* <pointLight distance={40} intensity={8} color="lightblue" /> */}
+      {/* Soft studio lighting setup */}
+      <ambientLight intensity={0.4} />
+
+      <hemisphereLight intensity={0.6} groundColor="#eae3d8" color="#ffffff" />
+
+      {/* Key light */}
+      <directionalLight position={[5, 8, 5]} intensity={1.2} castShadow />
+
+      {/* Fill light */}
+      <directionalLight position={[-5, 4, 3]} intensity={0.5} />
       {isMobile && (
         <OrbitControls
           enableDamping
@@ -141,28 +141,28 @@ const Experience = () => {
         <group rotation={[-Math.PI / 3, 0, 1]}>
           <Lightformer
             form="circle"
-            intensity={4}
+            intensity={2.5}
             rotation-x={Math.PI / 2}
             position={[0, 5, -9]}
             scale={2}
           />
           <Lightformer
             form="circle"
-            intensity={2}
+            intensity={1.2}
             rotation-y={Math.PI / 2}
             position={[-5, 1, -1]}
             scale={2}
           />
           <Lightformer
             form="circle"
-            intensity={2}
+            intensity={1.2}
             rotation-y={Math.PI / 2}
             position={[-5, -1, -1]}
             scale={2}
           />
           <Lightformer
             form="circle"
-            intensity={2}
+            intensity={1.5}
             rotation-y={-Math.PI / 2}
             position={[10, 1, 0]}
             scale={8}

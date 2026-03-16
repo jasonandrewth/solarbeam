@@ -71,7 +71,7 @@ const styles = {
     position: relative;
     z-index: 1;
     padding: var(--gap-l);
-    font-size: var(--type--scale---0);
+    font-size: var(--type--scale---2);
     min-height: 100vh;
     padding-top: 12rem;
 

@@ -53,7 +53,7 @@ const AboutPage = () => {
           target="_blank"
         >
           <button css={styles.button}>
-            Schedule Appointment <ChevronDown />
+            Schedule Appointment <ChevronDown height="18" />
           </button>
         </a>
 
@@ -67,11 +67,11 @@ const styles = {
   header: css`
     z-index: 1;
     max-width: 50vw;
-    font-size: var(--type--scale---1);
+    font-size: var(--type--scale---2);
 
     * {
       text-transform: uppercase;
-      font-size: var(--type--scale---1);
+      font-size: var(--type--scale---2);
       line-height: var(--type--lineheight--1);
     }
   `,
@@ -124,11 +124,9 @@ const styles = {
     margin-top: var(--gap-m);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.8);
-    background-color: transparent;
+    background-color: var(--color--grey);
     /* color: var(--color--white); */
-    border: 0.75px solid #9b9b9b;
-    border-radius: 9999px;
-    padding: 0.6rem 1rem;
+    padding: 0 2px;
     cursor: pointer;
 
     display: flex;

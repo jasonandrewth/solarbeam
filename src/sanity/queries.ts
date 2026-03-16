@@ -11,7 +11,6 @@ export const galleryQuery = groq`*[_type == "gallery"][0]{
       crop,
       asset->{
         _id,
-        url,
         metadata{ lqip, dimensions{ width, height, aspectRatio } }
       }
     },
@@ -21,7 +20,6 @@ export const galleryQuery = groq`*[_type == "gallery"][0]{
       crop,
       asset->{
         _id,
-        url,
         metadata{ lqip, dimensions{ width, height, aspectRatio } }
       }
     }
@@ -42,7 +40,6 @@ export const archiveQuery = groq`*[_type == "archive"][0]{
       crop,
       asset->{
         _id,
-        url,
         metadata{ lqip, dimensions{ width, height, aspectRatio } }
       }
     }

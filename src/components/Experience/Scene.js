@@ -17,12 +17,14 @@ export default function Scene({ ...props }) {
   const isMobile = useMediaQuery(MediaQueries.mobile);
 
   const [dpr, setDpr] = useState(1.5);
-  const [frameloop, setFrameloop] = useState("always");
+  const [tabHidden, setTabHidden] = useState(false);
   const [showPerf, setShowPerf] = useState(false);
 
+  const isHomepage = path === "/";
+  const frameloop = !isHomepage || tabHidden ? "never" : "always";
+
   useEffect(() => {
-    const handleVisibilityChange = () =>
-      setFrameloop(document.hidden ? "never" : "always");
+    const handleVisibilityChange = () => setTabHidden(document.hidden);
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () =>
       document.removeEventListener("visibilitychange", handleVisibilityChange);

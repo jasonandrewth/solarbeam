@@ -7,6 +7,7 @@ import { useGlobalData } from "@/context/globalContext";
 
 import { client } from "@/sanity/client";
 import { archiveQuery } from "@/sanity/queries";
+import { urlFor } from "@/sanity/lib/image";
 
 const mockData = [
   {
@@ -68,7 +69,9 @@ const ArchivePage = ({ archive }) => {
     <>
       <div css={styles.grid}>
         {(archive?.items || mockData).map((article, idx) => {
-          const imageUrl = article.image?.asset?.url || article.url;
+          const imageUrl = article.image?.asset?._id
+            ? urlFor(article.image).width(800).format("webp").url()
+            : article.url;
           return (
             <article key={article._id || idx} css={styles.card}>
               <div css={styles.aspectRatio}>
@@ -123,7 +126,7 @@ const styles = {
 
     * {
       text-transform: uppercase;
-      font-size: var(--type--scale---0);
+      font-size: var(--type--scale---2);
       line-height: var(--type--lineheight--1);
       color: rgba(255, 255, 255, 0.8);
     }

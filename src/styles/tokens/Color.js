@@ -4,8 +4,8 @@ const css = String.raw;
 const ColorValues = {
   black: "#19171A",
   white: "#f0ede1ff",
-  grey: "#f5f5f5",
-  pink: "#fe1295",
+  grey: "#96969644",
+  grey2: "#969696aa",
 };
 
 const Color = css`
@@ -13,6 +13,7 @@ const Color = css`
     --color--black: ${ColorValues.black};
     --color--white: ${ColorValues.white};
     --color--grey: ${ColorValues.grey};
+    --color--grey-900: ${ColorValues.grey2};
     --color--pink: ${ColorValues.pink};
   }
 `;

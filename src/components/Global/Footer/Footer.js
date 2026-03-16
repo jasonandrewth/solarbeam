@@ -34,7 +34,7 @@ const styles = {
     justify-content: space-between;
     align-items: flex-end;
     padding: 0.5rem 1rem;
-    padding: var(--gap-m) var(--gap-l);
+    padding: 8px;
     z-index: 999;
 
     * {
@@ -46,6 +46,10 @@ const styles = {
       * {
         color: var(--color--white);
       }
+    }
+
+    @media ${MediaQueries.medium} {
+      display: none;
     }
   `,
   left: css`
@@ -60,8 +64,8 @@ const styles = {
     line-height: 1;
   `,
   ig: css`
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     opacity: 1;
 
     transition: opacity 0.25s linear;
@@ -71,13 +75,13 @@ const styles = {
     }
     /* background-color: red; */
     @media ${MediaQueries.medium} {
-      width: 18px;
-      height: 18px;
+      width: 14px;
+      height: 14px;
     }
   `,
   mascot: css`
     width: auto;
-    height: 64px;
+    height: 40px;
     @media ${MediaQueries.medium} {
       height: 48px;
     }
