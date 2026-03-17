@@ -113,6 +113,7 @@ const Experience = () => {
           enableDamping
           enablePan={false}
           enableZoom={false}
+          minPolarAngle={Math.PI * 0.5}
           maxPolarAngle={Math.PI * 0.5}
           minAzimuthAngle={-Math.PI / 4}
           maxAzimuthAngle={Math.PI / 4}

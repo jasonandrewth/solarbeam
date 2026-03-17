@@ -80,6 +80,7 @@ const styles = {
     }
 
     @media ${MediaQueries.medium} {
+      padding: var(--gap-s);
       padding-top: calc(var(--gap-xl) + var(--gap-xl));
     }
   `,

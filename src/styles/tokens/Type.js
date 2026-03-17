@@ -65,7 +65,7 @@ const Type = css`
 
       --type--scale---2: 1rem;
       //p1
-      --type--scale---1: 0.7rem; // 0.7777
+      --type--scale---1: 0.77rem; // 0.7777
       //p2
       --type--scale---0: 1rem; // 1
       //h5

@@ -398,7 +398,7 @@ const styles = {
       min-width: 0;
       display: flex;
       align-items: stretch;
-      padding: 5px 2px 5px;
+      padding: 50px var(--Label--padding--h);
     }
   `,
 
@@ -463,6 +463,13 @@ const styles = {
     svg {
       transform: rotate(-90deg);
     }
+
+    @media ${MediaQueries.mobile} {
+      /* span,
+      li {
+        padding: 5px 0px 5px;
+      } */
+    }
   `,
 
   mobileIndexToggle: css`
@@ -489,7 +496,7 @@ const styles = {
     span {
       display: block;
       width: 100%;
-      padding: 5px var(--Label--padding--h) 5px;
+      padding: 5px 2px 5px;
     }
   `,
 };
