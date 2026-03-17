@@ -3,9 +3,10 @@ import { css } from "@emotion/react";
 import { MediaQueries } from "@/styles/mixins/MediaQueries";
 
 import { useLenis } from "lenis/react";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
+import LoadScreen from "@/components/Global/LoadScreen/LoadScreen";
 
 let easing = [0.175, 0.85, 0.42, 0.96];
 
@@ -37,6 +38,8 @@ const TransitionSetting = {
 
 const PageTransitions = ({ children }) => {
   const pathname = usePathname();
+  const [showLoadScreen, setShowLoadScreen] = useState(true);
+  const isFirstRender = useRef(true);
 
   const lenis = useLenis(({ scroll }) => {});
 
@@ -47,8 +50,19 @@ const PageTransitions = ({ children }) => {
     lenis.scrollTo(0, { immediate: true });
   }, [pathname, lenis]);
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+    }
+    setShowLoadScreen(true);
+    const timer = setTimeout(() => setShowLoadScreen(false), 1000);
+    return () => clearTimeout(timer);
+  }, [pathname]);
+
   return (
-    <AnimatePresence mode="wait" initial={false}>
+    <>
+      <LoadScreen isVisible={showLoadScreen} />
+      <AnimatePresence mode="wait" initial={false}>
       <motion.main
         initial="initial"
         animate="enter"
@@ -62,7 +76,8 @@ const PageTransitions = ({ children }) => {
       >
         {children}
       </motion.main>
-    </AnimatePresence>
+      </AnimatePresence>
+    </>
   );
 };
 
